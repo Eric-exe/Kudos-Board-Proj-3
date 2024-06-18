@@ -3,14 +3,69 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 
 app.use(cors())
 app.use(express.json())
 
 const PORT = process.env.PORT || 3000
 
-app.get('/boards', (req, res) => {
-    res.send("Hello world")
+// User
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    // verify if username is already in use
+    const userWithSameName = await prisma.User.findUnique({
+        where: { username: username }
+    })
+
+    if (userWithSameName) {
+        res.status(409).send("Username taken")
+        return
+    }
+
+    const newUser = await prisma.User.create({
+        data: { username: username, password: password }
+    })
+
+    res.json({id: newUser["id"], username: newUser["username"]})
+})
+
+app.get('/user/:id', async (req, res) => {
+    const user = await prisma.User.findUnique({
+        where: { id: parseInt(req.params.id) }
+    })
+
+    if (user) {
+        res.json({id: user["id"], username: user["username"]})
+    }
+    else {
+        res.status(404).send("No user found")
+    }
+})
+
+// Boards
+app.post('/boards', async (req, res) => {
+    const { authorId, title, imgUrl, category } = req.body
+    
+    const newBoard = await prisma.Board.create({
+        data: { 
+            authorId: authorId, 
+            title: title, 
+            imgUrl: imgUrl, 
+            category: category, 
+            upvotes: 0, 
+            usersLiked: {}, 
+            usersDisliked: {}
+        }
+    })
+
+    res.json(newBoard)
+})
+
+app.get('/boards', async (req, res) => {
+    res.json(await prisma.Board.findMany())
 })
 
 app.listen(PORT, () => {
