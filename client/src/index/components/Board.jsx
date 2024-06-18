@@ -16,9 +16,12 @@ function Board(props) {
             <img src={props.imgSrc} className="card-img-top" alt="Board image"/>
 
             <div className="card-body">
-                <h5 className="card-title">{props.title}</h5>
-                <p className="card-text">{props.category}</p>
-                <p className="card-text">By: {props.author}</p>
+                <div className="card-title d-flex align-items-center">
+                    <h5 className="my-auto">{props.title}</h5>
+                    &nbsp;
+                    <span className="badge text-bg-secondary">{props.category}</span>
+                </div>
+                <h6 className="card-text">By: {props.author}</h6>
             </div>
 
             <div className="card-footer">
@@ -26,7 +29,7 @@ function Board(props) {
                     props.isOwned ? 
                     <div className="d-flex justify-content-between">
                         <div className="d-flex align-items-center">
-                            <i class="bi bi-caret-up-fill h5 m-0"></i>
+                            <i className="bi bi-caret-up-fill h5 m-0"></i>
                             &nbsp;
                             {props.upvotes}
                             &nbsp;

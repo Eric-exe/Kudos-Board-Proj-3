@@ -69,7 +69,7 @@ function BrowseBar(props) {
                 </button>
             </div>
             {/* Modal for the create board button */}
-            <div className="modal fade"  id="createBoardModal" tabindex="-1">
+            <div className="modal fade"  id="createBoardModal" tabIndex="-1">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">

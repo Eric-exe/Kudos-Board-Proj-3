@@ -19,10 +19,11 @@ function App() {
                 category={[category, setCategory]}
             />
 
-            <div className="d-flex flex-wrap row-cols-2 row-cols-md-4 p-2 justify-content-center">
+            <div className="d-flex flex-wrap row-cols-2 row-cols-md-4 row-cols-lg-5 p-2 justify-content-center">
                 <Board 
                     imgSrc="https://via.placeholder.com/150"
                     title="Board Title"
+                    category="Thank You"
                     author="Author"
                     upvotes={0}
                     isOwned={false}
