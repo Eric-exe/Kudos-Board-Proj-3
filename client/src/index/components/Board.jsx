@@ -35,7 +35,7 @@ function Board(props) {
                             &nbsp;
                             <i className="bi bi-trash-fill h5 m-0 trash"></i>
                         </div>
-                        <btn className="btn btn-sm btn-outline-primary">View Board</btn>
+                        <button className="btn btn-sm btn-outline-primary">View Board</button>
                     </div>
                     :
                     <div className="d-flex justify-content-between">
@@ -47,7 +47,7 @@ function Board(props) {
                             {props.upvotes}
                         </div>
 
-                        <btn className="btn btn-sm btn-outline-primary">View Board</btn>
+                        <button className="btn btn-sm btn-outline-primary">View Board</button>
                     </div>
                 }
                 

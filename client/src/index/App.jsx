@@ -32,6 +32,7 @@ function App() {
                 <Board 
                     imgSrc="https://via.placeholder.com/350"
                     title="Board Title"
+                    category="Celebration"
                     author="Author"
                     upvotes={0}
                     isOwned={true}
@@ -40,6 +41,7 @@ function App() {
                 <Board 
                     imgSrc="https://via.placeholder.com/1050"
                     title="Board Title"
+                    category="Inspiration"
                     author="Author"
                     upvotes={0}
                     isOwned={false}
