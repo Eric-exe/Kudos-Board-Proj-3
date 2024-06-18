@@ -13,8 +13,13 @@ const PORT = process.env.PORT || 3000
 
 // User
 app.post('/register', async (req, res) => {
-    const { username, password } = req.body;
 
+    // verify body is good
+    const { username, password } = req.body || {};
+    if (username == undefined) {
+        res.status(400).send("Bad username or password")
+        return
+    }
     // verify if username is already in use
     const userWithSameName = await prisma.User.findUnique({
         where: { username: username }
@@ -33,6 +38,12 @@ app.post('/register', async (req, res) => {
 })
 
 app.get('/user/:id', async (req, res) => {
+    const id = parseInt(req.params.id) || undefined
+
+    if (id == undefined) {
+        res.status(400).send("Bad id")
+        return
+    }
     const user = await prisma.User.findUnique({
         where: { id: parseInt(req.params.id) }
     })
