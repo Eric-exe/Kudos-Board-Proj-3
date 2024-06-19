@@ -85,16 +85,31 @@ app.post("/boards", async (req, res) => {
 });
 
 app.get("/boards", async (req, res) => {
+    // handle query parameters
+    let whereObj = {};
+    if (req.query.category) {
+        whereObj = { category: req.query.category };
+    }
+    if (req.query.authorId) {
+        whereObj = { authorId: parseInt(req.query.authorId) };
+    }
+
     let boards = await prisma.Board.findMany({
         include: { author: true },
+        where: whereObj,
     });
 
     for (const board of boards) {
         delete board["author"]["password"];
     }
 
-    // default, sort by upvotes
-    boards.sort((a, b) => b["upvotes"] - a["upvotes"]);
+    if (req.query.recent && req.query.recent == "true") {
+        boards.sort((a, b) => b["id"] - a["id"]);
+    }
+    else {
+        // default, sort by upvotes
+        boards.sort((a, b) => b["upvotes"] - a["upvotes"]);
+    }
 
     res.json(boards);
 });

@@ -45,6 +45,21 @@ class API {
         )
     }
 
+    static async getFilteredBoardData(funct, filters) {
+        let url = import.meta.env.VITE_DB_URL + "/boards?";
+        for (const key in filters) {
+            url += key + "=" + filters[key] + "&";
+        }
+        url = url.slice(0, -1);
+        this.fetchRequest(
+            url,
+            "get",
+            {},
+            funct,
+            false
+        )
+    }
+
     static async createBoard(funct, authorId, title, imgUrl, category) {
         this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/boards",

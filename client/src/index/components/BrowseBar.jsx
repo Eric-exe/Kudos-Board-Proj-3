@@ -4,6 +4,7 @@ import API from "../../api";
 
 BrowseBar.propTypes = {
     userData: propTypes.array.isRequired,
+    boardDataFunc: propTypes.func.isRequired,
     category: propTypes.array.isRequired, // 0 -> value, 1 -> function
 };
 
@@ -18,6 +19,22 @@ function BrowseBar(props) {
                 button.classList.remove("active");
             }
         });
+
+        // send an API request to get the filtered board data
+        if (props.category[0] == "All") {
+            API.getBoardData(props.boardDataFunc);
+        }
+        else if (props.category[0] == "Recent") {
+            API.getFilteredBoardData(props.boardDataFunc, {"recent": true});
+        }
+        else if (props.category[0] == "Created") {
+            API.getFilteredBoardData(props.boardDataFunc, {"authorId": props.userData[0]["id"]});
+        }
+        else {
+            // category
+            API.getFilteredBoardData(props.boardDataFunc, {"category": props.category[0]});
+        }
+
     }, [props.category[0]]);
 
     // handle the category button click event
