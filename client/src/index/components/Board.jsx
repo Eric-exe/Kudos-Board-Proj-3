@@ -1,27 +1,34 @@
 import propTypes from "prop-types";
 import './Board.css';
+import API from '../../api'
 
 Board.propTypes = {
-    imgSrc: propTypes.string.isRequired,
-    title: propTypes.string.isRequired,
-    category: propTypes.string.isRequired,
-    author: propTypes.string.isRequired,
-    upvotes: propTypes.number.isRequired,
-    isOwned: propTypes.bool.isRequired,
+    board: propTypes.object.isRequired,
+    isOwned: propTypes.bool.isRequired // changes the ui to allow deletion and stops self-upvotes
 };
+
+/*
+board = {
+    "id" (int),
+    "title" (string),
+    "imgUrl" (string),
+    "category" (string)
+    "upvotes" (int)
+}
+*/
 
 function Board(props) {
     return (
         <div className={"card m-2 border border-2 rounded board-card " + (props.isOwned ? "border-success" : "border-primary")}>
-            <img src={props.imgSrc} className="card-img-top" alt="Board image"/>
+            <img src={props.board["imgUrl"]} className="card-img-top" alt="Board image"/>
 
             <div className="card-body">
                 <div className="card-title d-flex align-items-center">
-                    <h5 className="my-auto">{props.title}</h5>
+                    <h5 className="my-auto">{props.board["title"]}</h5>
                     &nbsp;
-                    <span className="badge text-bg-secondary">{props.category}</span>
+                    <span className="badge text-bg-secondary">{props.board["category"]}</span>
                 </div>
-                <h6 className="card-text">By: {props.author}</h6>
+                <h6 className="card-text">By: {props.board["authorId"]}</h6>
             </div>
 
             <div className="card-footer">
@@ -31,7 +38,7 @@ function Board(props) {
                         <div className="d-flex align-items-center">
                             <i className="bi bi-caret-up-fill h5 m-0"></i>
                             &nbsp;
-                            {props.upvotes}
+                            {props.board["upvotes"]}
                             &nbsp;
                             <i className="bi bi-trash-fill h5 m-0 trash"></i>
                         </div>
@@ -44,7 +51,7 @@ function Board(props) {
                             &nbsp;
                             <i className="bi bi-caret-down-square h5 downvote m-0"></i>
                             &nbsp;
-                            {props.upvotes}
+                            {props.board["upvotes"]}
                         </div>
 
                         <button className="btn btn-sm btn-outline-primary">View Board</button>
