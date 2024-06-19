@@ -50,8 +50,10 @@ app.get("/user/:id", async (req, res) => {
         where: { id: parseInt(req.params.id) },
         include: {
             boardsCreated: true,
-            boardsLiked: true,
-            boardsDisliked: true,
+            cardsCreated: true,
+            cardsLiked: true,
+            cardsDisliked: true,
+            commentsCreated: true
         },
     });
 
@@ -73,9 +75,7 @@ app.post("/boards", async (req, res) => {
             title: title,
             imgUrl: imgUrl,
             category: category,
-            upvotes: 0,
-            usersLiked: {},
-            usersDisliked: {},
+            cards: {}
         },
         include: { author: true}
     });
@@ -93,6 +93,12 @@ app.get("/boards", async (req, res) => {
     if (req.query.authorId) {
         whereObj = { authorId: parseInt(req.query.authorId) };
     }
+    if (req.query.title) {
+        whereObj = { 
+            title: { contains: req.query.title },
+            mode: "insensitive"
+        };
+    }
 
     let boards = await prisma.Board.findMany({
         include: { author: true },
@@ -105,10 +111,6 @@ app.get("/boards", async (req, res) => {
 
     if (req.query.recent && req.query.recent == "true") {
         boards.sort((a, b) => b["id"] - a["id"]);
-    }
-    else {
-        // default, sort by upvotes
-        boards.sort((a, b) => b["upvotes"] - a["upvotes"]);
     }
 
     res.json(boards);
