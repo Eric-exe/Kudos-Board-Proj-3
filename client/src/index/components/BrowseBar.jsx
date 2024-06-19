@@ -42,6 +42,25 @@ function BrowseBar(props) {
         props.category[1](event.target.value);
     };
 
+    // debounce fn: https://www.inkoop.io/blog/debounce-and-throttle-javascript-edition/
+    let searchDebounceTimer = null;
+    const debounce = (func, delay) => {
+        return (...args) => {
+            if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => func(...args), delay);
+        }
+    }
+
+    // handle the search bar update event, using debounce to prevent spamming API
+    const handleSearchBarUpdate = (event) => {
+        const debouncedSearchFn = debounce(() => {
+            console.log("searching for: " + event.target.value);
+            API.getFilteredBoardData(props.boardDataFunc, { title: event.target.value });
+        }, 300);
+    
+        debouncedSearchFn();
+    };
+
     // handles the creation of a new board
     const [createBoardTitle, setCreateBoardTitle] = useState("");
     const [createBoardImgURL, setCreateBoardImgURL] = useState("");
@@ -79,6 +98,7 @@ function BrowseBar(props) {
                         className="form-control bg-light border border-primary mb-1"
                         type="text"
                         placeholder="Search boards..."
+                        onChange={handleSearchBarUpdate}
                     ></input>
                 </div>
             </div>

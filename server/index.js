@@ -95,8 +95,10 @@ app.get("/boards", async (req, res) => {
     }
     if (req.query.title) {
         whereObj = { 
-            title: { contains: req.query.title },
-            mode: "insensitive"
+            title: { 
+                contains: req.query.title,
+                mode: "insensitive" 
+            },
         };
     }
 
