@@ -37,3 +37,8 @@
 .trash:hover {
     color: #dc3545;
 }
+
+.card-img-top {
+    object-fit: cover;
+    height: 50vh;
+}

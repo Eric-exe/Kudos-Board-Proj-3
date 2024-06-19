@@ -26,7 +26,7 @@ function App() {
                 category={[category, setCategory]}
             />
 
-            <div className="d-flex flex-wrap row-cols-2 row-cols-md-4 row-cols-lg-5 p-2 justify-content-center">
+            <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 justify-content-center w-100">
                 {
                     boardData.map((board, index) => {
                         console.log(boardData);

@@ -19,11 +19,11 @@ board = {
 
 function Board(props) {
     return (
-        <div className={"card m-2 border border-2 rounded board-card " + (props.isOwned ? "border-success" : "border-primary")}>
-            <img src={props.board["imgUrl"]} className="card-img-top" alt="Board image"/>
+        <div className={"card m-2 p-0 border border-2 rounded board-card " + (props.isOwned ? "border-success" : "border-primary")}>
+            <img src={props.board["imgUrl"]} className="card-img-top img-thumbnail img-fluid mh-50" alt="Board image"/>
 
             <div className="card-body">
-                <div className="card-title d-flex align-items-center">
+                <div className="card-title d-flex flex-wrap align-items-center">
                     <h5 className="my-auto">{props.board["title"]}</h5>
                     &nbsp;
                     <span className="badge text-bg-secondary">{props.board["category"]}</span>
@@ -34,7 +34,7 @@ function Board(props) {
             <div className="card-footer">
                 {
                     props.isOwned ? 
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex flex-wrap justify-content-between">
                         <div className="d-flex align-items-center">
                             <i className="bi bi-caret-up-fill h5 m-0"></i>
                             &nbsp;
@@ -42,10 +42,10 @@ function Board(props) {
                             &nbsp;
                             <i className="bi bi-trash-fill h5 m-0 trash"></i>
                         </div>
-                        <button className="btn btn-sm btn-outline-primary">View Board</button>
+                        <button className="btn btn-sm btn-outline-primary">View</button>
                     </div>
                     :
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex flex-wrap justify-content-between">
                         <div className="d-flex align-items-center">
                             <i className="bi bi-caret-up-square h5 upvote m-0"></i>
                             &nbsp;
@@ -54,7 +54,7 @@ function Board(props) {
                             {props.board["upvotes"]}
                         </div>
 
-                        <button className="btn btn-sm btn-outline-primary">View Board</button>
+                        <button className="btn btn-sm btn-outline-primary">View</button>
                     </div>
                 }
                 
