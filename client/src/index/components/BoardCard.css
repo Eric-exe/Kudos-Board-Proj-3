@@ -1,0 +1,44 @@
+.board-card {
+    transition: all 0.1s;
+}
+
+.board-card:hover {
+    transform: scale(1.05);
+}
+
+.upvote {
+    transition: all 0.2s;
+}
+
+.upvote:hover {
+    color: #198754;
+}
+
+.upvote-active {
+    color: #198754;
+}
+
+.downvote {
+    transition: all 0.2s;
+}
+
+.downvote:hover {
+    color: #dc3545;
+}
+
+.downvote-active {
+    color: #dc3545;
+}
+
+.trash {
+    transition: all 0.2s;
+}
+
+.trash:hover {
+    color: #dc3545;
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 50vh;
+}
