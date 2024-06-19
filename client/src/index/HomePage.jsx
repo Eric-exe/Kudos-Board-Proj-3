@@ -7,6 +7,8 @@ import propTypes from "prop-types";
 HomePage.propTypes = {
     userData: propTypes.array.isRequired,
     boardData: propTypes.array.isRequired,
+    setInHome: propTypes.func.isRequired,
+    setViewingBoardId: propTypes.func.isRequired,
 }
 
 function HomePage(props) {
@@ -39,6 +41,8 @@ function HomePage(props) {
                             )}
                             boardDataFunc={props.boardData[1]}
                             filter={filter}
+                            setInHome={props.setInHome}
+                            setViewingBoardId={props.setViewingBoardId}
                         />
                     );
                 })}

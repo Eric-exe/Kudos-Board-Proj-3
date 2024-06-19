@@ -1,6 +1,5 @@
 import propTypes from "prop-types";
 import API from "../../api";
-import Globals from "../../utils";
 import "./BoardCard.css";
 
 BoardCard.propTypes = {
@@ -10,15 +9,23 @@ BoardCard.propTypes = {
     isOwned: propTypes.bool.isRequired, // changes the ui to allow deletion and stops self-upvotes
     boardDataFunc: propTypes.func.isRequired,
     filter: propTypes.string.isRequired,
+    setInHome: propTypes.func.isRequired,
+    setViewingBoardId: propTypes.func.isRequired,
 };
 
 function BoardCard(props) {
-    // handle the deletion of a board
-    const handleDeleteBoard = (event) => {
+    // handle the deletion of a board card
+    const handleDeleteBoardCard = (event) => {
         API.deleteBoard(() => {}, props.board["id"], props.userData["id"]);
         // delete from boardData state
         props.boardData[1](props.boardData[0].filter((board) => board["id"] !== props.board["id"]));
     }
+
+    // handle the viewing of a board
+    const handleViewBoard = (event) => {
+        props.setInHome(false);
+        props.setViewingBoardId(props.board["id"]);
+    } 
 
     return (
         <div
@@ -42,15 +49,15 @@ function BoardCard(props) {
                 {props.isOwned ? (
                     <div className="d-flex flex-wrap justify-content-between">
                         <div className="d-flex align-items-center">
-                            <i className="bi bi-trash-fill h5 m-0 trash" onClick={handleDeleteBoard}></i>
+                            <i className="bi bi-trash-fill h5 m-0 trash" onClick={handleDeleteBoardCard}></i>
                         </div>
-                        <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.board["id"]}>
+                        <a className="btn btn-sm btn-outline-primary" onClick={handleViewBoard}>
                             View
                         </a>
                     </div>
                 ) : (
                     <div className="d-flex flex-wrap justify-content-end">
-                        <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.board["id"]}>
+                        <a className="btn btn-sm btn-outline-primary" onClick={handleViewBoard}>
                             View
                         </a>
                     </div>

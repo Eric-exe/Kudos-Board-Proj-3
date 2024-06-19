@@ -13,6 +13,7 @@ function App() {
     const [boardData, setBoardData] = useState([]);
 
     const [inHome, setInHome] = useState(true);
+    const [viewingboardId, setViewingBoardId] = useState(-1);
 
     // initialize the user/boards when loaded
     useEffect(() => {
@@ -30,7 +31,12 @@ function App() {
         <>
         {
             inHome ? 
-            <HomePage userData={[userData, setUserData]} boardData={[boardData, setBoardData]} />
+            <HomePage 
+                userData={[userData, setUserData]} 
+                boardData={[boardData, setBoardData]}
+                setInHome={setInHome}
+                setViewingBoardId={setViewingBoardId}
+            />
             :
             <></>
         }
