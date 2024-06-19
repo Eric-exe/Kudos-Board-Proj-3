@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import "./HomePage.css";
+import { useState } from "react";
 import BrowseBar from "./components/BrowseBar";
 import BoardCard from "./components/BoardCard";
 import propTypes from "prop-types";

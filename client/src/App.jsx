@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import HomePage from "./index/HomePage";
+import HomePage from "./HomePage/HomePage";
+import CardsPage from "./CardsPage/CardsPage";
 import API from "./api";
 
 function App() {
@@ -38,7 +39,8 @@ function App() {
                 setViewingBoardId={setViewingBoardId}
             />
             :
-            <></>
+            <CardsPage
+            />
         }
         </>
     );

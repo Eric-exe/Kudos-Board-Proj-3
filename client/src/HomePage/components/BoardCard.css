@@ -42,3 +42,11 @@
     object-fit: cover;
     height: 50vh;
 }
+
+.text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    margin: 0;
+}

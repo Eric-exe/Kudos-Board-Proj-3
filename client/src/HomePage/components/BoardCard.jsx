@@ -37,12 +37,11 @@ function BoardCard(props) {
             <img src={props.board["imgUrl"]} className="card-img-top img-thumbnail img-fluid mh-50" alt="Board image" />
 
             <div className="card-body">
-                <div className="card-title d-flex flex-wrap align-items-center">
-                    <h5 className="my-auto">{props.board["title"]}</h5>
-                    &nbsp;
+                <div className="card-title">
+                    <h5 className="my-auto text mr-1">{props.board["title"]}</h5>
                     <span className="badge text-bg-secondary">{props.board["category"]}</span>
                 </div>
-                <h6 className="card-text">By: {props.board["author"]["username"]}</h6>
+                <h6 className="card-text text">By: {props.board["author"]["username"]}</h6>
             </div>
 
             <div className="card-footer">
