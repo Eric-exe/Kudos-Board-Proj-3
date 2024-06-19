@@ -35,17 +35,7 @@ class API {
         )
     }
 
-    static async getBoardData(funct) {
-        this.fetchRequest(
-            import.meta.env.VITE_DB_URL + "/boards",
-            "get",
-            {},
-            funct,
-            false
-        )
-    }
-
-    static async getFilteredBoardData(funct, filters) {
+    static async getBoardData(funct, filters) {
         let url = import.meta.env.VITE_DB_URL + "/boards?";
         for (const key in filters) {
             url += key + "=" + filters[key] + "&";
@@ -72,6 +62,18 @@ class API {
             }),
             funct,
             true
+        )
+    }
+
+    static async deleteBoard(funct, id, authorId) {
+        this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/boards/" + String(id),
+            "delete",
+            JSON.stringify({
+                "authorId": authorId
+            }),
+            funct,
+            false
         )
     }
 }

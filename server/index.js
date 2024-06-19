@@ -118,6 +118,30 @@ app.get("/boards", async (req, res) => {
     res.json(boards);
 });
 
+app.delete('/boards/:id', async (req, res) => {
+    const id = parseInt(req.params.id) || undefined;
+    const authorId = parseInt(req.body.authorId) || undefined;
+
+    if (id == undefined) {
+        res.status(400).send("Bad id");
+        return;
+    }
+
+    const board = await prisma.Board.delete({
+        where: { 
+            id: id, 
+            authorId: authorId
+        },
+    });
+
+    if (!board) {
+        res.status(404).send("No board found");
+        return;
+    }
+
+    res.json(board);
+});
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

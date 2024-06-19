@@ -1,45 +1,18 @@
 import { useState, useEffect } from "react";
 import propTypes from "prop-types";
 import API from "../../api";
+import utils from "../../utils";
 
 BrowseBar.propTypes = {
     userData: propTypes.array.isRequired,
     boardDataFunc: propTypes.func.isRequired,
-    category: propTypes.array.isRequired, // 0 -> value, 1 -> function
+    filter: propTypes.array.isRequired, 
 };
 
 function BrowseBar(props) {
-    // update the active button
-    useEffect(() => {
-        const buttons = document.querySelectorAll(".btn");
-        buttons.forEach((button) => {
-            if (button.value == props.category[0]) {
-                button.classList.add("active");
-            } else {
-                button.classList.remove("active");
-            }
-        });
-
-        // send an API request to get the filtered board data
-        if (props.category[0] == "All") {
-            API.getBoardData(props.boardDataFunc);
-        }
-        else if (props.category[0] == "Recent") {
-            API.getFilteredBoardData(props.boardDataFunc, {"recent": true});
-        }
-        else if (props.category[0] == "Created") {
-            API.getFilteredBoardData(props.boardDataFunc, {"authorId": props.userData[0]["id"]});
-        }
-        else {
-            // category
-            API.getFilteredBoardData(props.boardDataFunc, {"category": props.category[0]});
-        }
-
-    }, [props.category[0]]);
-
     // handle the category button click event
-    const handleCategoryClick = (event) => {
-        props.category[1](event.target.value);
+    const handleFilterClick = (event) => {
+        props.filter[1](event.target.value);
     };
 
     // debounce fn: https://www.inkoop.io/blog/debounce-and-throttle-javascript-edition/
@@ -48,16 +21,15 @@ function BrowseBar(props) {
         return (...args) => {
             if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
             searchDebounceTimer = setTimeout(() => func(...args), delay);
-        }
-    }
+        };
+    };
 
     // handle the search bar update event, using debounce to prevent spamming API
     const handleSearchBarUpdate = (event) => {
         const debouncedSearchFn = debounce(() => {
-            console.log("searching for: " + event.target.value);
-            API.getFilteredBoardData(props.boardDataFunc, { title: event.target.value });
+            API.getBoardData(props.boardDataFunc, { title: event.target.value });
         }, 300);
-    
+
         debouncedSearchFn();
     };
 
@@ -81,7 +53,7 @@ function BrowseBar(props) {
             createBoardImgURL,
             createBoardCategory
         );
-        
+
         // cleanup
         setCreateBoardTitle("");
         setCreateBoardImgURL("");
@@ -89,6 +61,19 @@ function BrowseBar(props) {
         document.getElementById("createBoard-category").selectedIndex = 0;
         bootstrap.Modal.getInstance(document.getElementById("createBoardModal")).hide();
     };
+
+    // update the active filter button and fetch the board data
+    useEffect(() => {
+        const buttons = document.querySelectorAll(".btn");
+        buttons.forEach((button) => {
+            if (button.value == props.filter[0]) {
+                button.classList.add("active");
+            } else {
+                button.classList.remove("active");
+            }
+        });
+        API.getBoardData(props.boardDataFunc, utils.toFilterObject(props.filter[0], props.userData[0]["id"]));
+    }, [props.filter[0]]);
 
     return (
         <>
@@ -104,27 +89,27 @@ function BrowseBar(props) {
             </div>
 
             <div className="d-flex flex-wrap justify-content-center">
-                <button className="btn btn-outline-primary mt-1 mx-1" value="All" onClick={handleCategoryClick}>
+                <button className="btn btn-outline-primary mt-1 mx-1" value="All" onClick={handleFilterClick}>
                     All
                 </button>
 
-                <button className="btn btn-outline-primary mt-1 mx-1" value="Recent" onClick={handleCategoryClick}>
+                <button className="btn btn-outline-primary mt-1 mx-1" value="Recent" onClick={handleFilterClick}>
                     Recent
                 </button>
 
-                <button className="btn btn-outline-primary mt-1 mx-1" value="Celebration" onClick={handleCategoryClick}>
+                <button className="btn btn-outline-primary mt-1 mx-1" value="Celebration" onClick={handleFilterClick}>
                     Celebration
                 </button>
 
-                <button className="btn btn-outline-primary mt-1 mx-1" value="Thank You" onClick={handleCategoryClick}>
+                <button className="btn btn-outline-primary mt-1 mx-1" value="Thank You" onClick={handleFilterClick}>
                     Thank You
                 </button>
 
-                <button className="btn btn-outline-primary mt-1 mx-1" value="Inspiration" onClick={handleCategoryClick}>
+                <button className="btn btn-outline-primary mt-1 mx-1" value="Inspiration" onClick={handleFilterClick}>
                     Inspiration
                 </button>
 
-                <button className="btn btn-outline-primary mt-1 mx-1" value="Created" onClick={handleCategoryClick}>
+                <button className="btn btn-outline-primary mt-1 mx-1" value="Created" onClick={handleFilterClick}>
                     Created
                 </button>
             </div>
@@ -162,7 +147,7 @@ function BrowseBar(props) {
                                             className="form-control"
                                             id="createBoard-title"
                                             value={createBoardTitle}
-                                            onChange={() => setCreateBoardTitle(event.target.value)}
+                                            onChange={(event) => setCreateBoardTitle(event.target.value)}
                                         ></input>
                                     </div>
                                 </div>
@@ -175,7 +160,7 @@ function BrowseBar(props) {
                                             className="form-control"
                                             id="createBoard-imgUrl"
                                             value={createBoardImgURL}
-                                            onChange={() => setCreateBoardImgURL(event.target.value)}
+                                            onChange={(event) => setCreateBoardImgURL(event.target.value)}
                                         ></input>
                                     </div>
                                 </div>
@@ -186,7 +171,7 @@ function BrowseBar(props) {
                                         <select
                                             id="createBoard-category"
                                             className="form-select"
-                                            onChange={() => setCreateBoardCategory(event.target.value)}
+                                            onChange={(event) => setCreateBoardCategory(event.target.value)}
                                         >
                                             <option selected disabled>
                                                 Choose a category

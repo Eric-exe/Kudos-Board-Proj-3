@@ -10,7 +10,7 @@ HomePage.propTypes = {
 }
 
 function HomePage(props) {
-    const [category, setCategory] = useState("All");
+    const [filter, setFilter] = useState("All");
 
     return (
         <>
@@ -23,7 +23,7 @@ function HomePage(props) {
             <BrowseBar
                 userData={props.userData}
                 boardDataFunc={props.boardData[1]}
-                category={[category, setCategory]}
+                filter={[filter, setFilter]}
             />
 
             <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 justify-content-center w-100">
@@ -31,10 +31,14 @@ function HomePage(props) {
                     return (
                         <BoardCard
                             key={index}
+                            userData={props.userData}
+                            boardData={props.boardData}
                             board={board}
                             isOwned={props.userData[0]["boardsCreated"].some(
                                 (createdBoard) => createdBoard["id"] === board["id"]
                             )}
+                            boardDataFunc={props.boardData[1]}
+                            filter={filter}
                         />
                     );
                 })}

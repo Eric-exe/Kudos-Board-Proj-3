@@ -17,7 +17,7 @@ function App() {
     // initialize the user/boards when loaded
     useEffect(() => {
         API.getUserData(setUserData, userData["id"]);
-        API.getBoardData(setBoardData);
+        API.getBoardData(setBoardData, {});
     }, []);
 
     // whenever boardData changes, update user data as well
