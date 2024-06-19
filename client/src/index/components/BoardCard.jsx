@@ -39,10 +39,6 @@ function BoardCard(props) {
                 {props.isOwned ? (
                     <div className="d-flex flex-wrap justify-content-between">
                         <div className="d-flex align-items-center">
-                            <i className="bi bi-caret-up-fill h5 m-0"></i>
-                            &nbsp;
-                            {props.board["upvotes"]}
-                            &nbsp;
                             <i className="bi bi-trash-fill h5 m-0 trash"></i>
                         </div>
                         <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.board["id"]}>
@@ -50,15 +46,7 @@ function BoardCard(props) {
                         </a>
                     </div>
                 ) : (
-                    <div className="d-flex flex-wrap justify-content-between">
-                        <div className="d-flex align-items-center">
-                            <i className="bi bi-caret-up-square h5 upvote m-0"></i>
-                            &nbsp;
-                            <i className="bi bi-caret-down-square h5 downvote m-0"></i>
-                            &nbsp;
-                            {props.board["upvotes"]}
-                        </div>
-
+                    <div className="d-flex flex-wrap justify-content-end">
                         <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.board["id"]}>
                             View
                         </a>

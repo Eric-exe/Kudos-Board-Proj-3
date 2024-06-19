@@ -17,33 +17,26 @@ model User {
     id                  Int @id @default(autoincrement())
     username            String @unique
     password            String
-
-    boardsCreated       Board[] @relation("BoardsCreated")
-    cardsCreated        Card[]
+    boardsCreated       Board[]
+    cardsCreated        Card[] @relation("cardsCreated")
+    cardsLiked          Card[] @relation("cardsLiked")
+    cardsDisliked       Card[] @relation("cardsDisliked")
     commentsCreated     Comment[]
-
-    boardsLiked         Board[] @relation("BoardsLiked")
-    boardsDisliked      Board[] @relation("BoardsDisliked")
-
 }
 
 model Board {
     id                  Int  @id @default(autoincrement())
-    author              User @relation("BoardsCreated", fields: [authorId], references: [id])
+    author              User @relation(fields: [authorId], references: [id])
     authorId            Int
     title               String
     imgUrl              String
     category            String
-    upvotes             Int
-    usersLiked          User[] @relation("BoardsLiked")
-    usersDisliked       User[] @relation("BoardsDisliked")
-
     cards               Card[]
 }
 
 model Card {
     id                  Int @id @default(autoincrement())
-    author              User @relation(fields: [authorId], references: [id])
+    author              User @relation("cardsCreated", fields: [authorId], references: [id])
     authorId            Int
     board               Board @relation(fields: [boardId], references: [id])
     boardId             Int
@@ -52,6 +45,9 @@ model Card {
     description         String
     gifUrl              String
     comments            Comment[]
+    likes               Int
+    usersLiked          User[] @relation("cardsLiked")
+    usersDisliked       User[] @relation("cardsDisliked")
 }
 
 model Comment {

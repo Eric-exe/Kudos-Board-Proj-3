@@ -14,7 +14,6 @@ CREATE TABLE "Board" (
     "title" TEXT NOT NULL,
     "imgUrl" TEXT NOT NULL,
     "category" TEXT NOT NULL,
-    "upvotes" INTEGER NOT NULL,
 
     CONSTRAINT "Board_pkey" PRIMARY KEY ("id")
 );
@@ -28,6 +27,7 @@ CREATE TABLE "Card" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "gifUrl" TEXT NOT NULL,
+    "likes" INTEGER NOT NULL,
 
     CONSTRAINT "Card_pkey" PRIMARY KEY ("id")
 );
@@ -43,13 +43,13 @@ CREATE TABLE "Comment" (
 );
 
 -- CreateTable
-CREATE TABLE "_BoardsLiked" (
+CREATE TABLE "_cardsLiked" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "_BoardsDisliked" (
+CREATE TABLE "_cardsDisliked" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -58,16 +58,16 @@ CREATE TABLE "_BoardsDisliked" (
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_BoardsLiked_AB_unique" ON "_BoardsLiked"("A", "B");
+CREATE UNIQUE INDEX "_cardsLiked_AB_unique" ON "_cardsLiked"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_BoardsLiked_B_index" ON "_BoardsLiked"("B");
+CREATE INDEX "_cardsLiked_B_index" ON "_cardsLiked"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_BoardsDisliked_AB_unique" ON "_BoardsDisliked"("A", "B");
+CREATE UNIQUE INDEX "_cardsDisliked_AB_unique" ON "_cardsDisliked"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_BoardsDisliked_B_index" ON "_BoardsDisliked"("B");
+CREATE INDEX "_cardsDisliked_B_index" ON "_cardsDisliked"("B");
 
 -- AddForeignKey
 ALTER TABLE "Board" ADD CONSTRAINT "Board_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -85,13 +85,13 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_authorId_fkey" FOREIGN KEY ("autho
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_BoardsLiked" ADD CONSTRAINT "_BoardsLiked_A_fkey" FOREIGN KEY ("A") REFERENCES "Board"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_cardsLiked" ADD CONSTRAINT "_cardsLiked_A_fkey" FOREIGN KEY ("A") REFERENCES "Card"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_BoardsLiked" ADD CONSTRAINT "_BoardsLiked_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_cardsLiked" ADD CONSTRAINT "_cardsLiked_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_BoardsDisliked" ADD CONSTRAINT "_BoardsDisliked_A_fkey" FOREIGN KEY ("A") REFERENCES "Board"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_cardsDisliked" ADD CONSTRAINT "_cardsDisliked_A_fkey" FOREIGN KEY ("A") REFERENCES "Card"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_BoardsDisliked" ADD CONSTRAINT "_BoardsDisliked_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_cardsDisliked" ADD CONSTRAINT "_cardsDisliked_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
