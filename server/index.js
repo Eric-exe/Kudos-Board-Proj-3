@@ -11,7 +11,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// User
+
+// User routes
 app.post("/register", async (req, res) => {
     // verify body is good
     const { username, password } = req.body || {};
@@ -45,20 +46,24 @@ app.get("/user/:id", async (req, res) => {
         return;
     }
 
-    // grab everything except the password
     const user = await prisma.User.findUnique({
         where: { id: parseInt(req.params.id) },
-        select: { id: true, username: true, boardsCreated: true, boardsLiked: true, boardsDisliked: true },
+        include: {
+            boardsCreated: true,
+            boardsLiked: true,
+            boardsDisliked: true,
+        },
     });
 
     if (user) {
+        delete user["password"];
         res.json(user);
     } else {
         res.status(404).send("No user found");
     }
 });
 
-// Boards
+// Board routes
 app.post("/boards", async (req, res) => {
     const { authorId, title, imgUrl, category } = req.body;
 
@@ -72,15 +77,26 @@ app.post("/boards", async (req, res) => {
             usersLiked: {},
             usersDisliked: {},
         },
+        include: { author: true}
     });
 
+    delete newBoard["author"]["password"];
     res.json(newBoard);
 });
 
 app.get("/boards", async (req, res) => {
-    res.json(await prisma.Board.findMany({
-        include: { author: true }
-    }));
+    let boards = await prisma.Board.findMany({
+        include: { author: true },
+    });
+
+    for (const board of boards) {
+        delete board["author"]["password"];
+    }
+
+    // default, sort by upvotes
+    boards.sort((a, b) => b["upvotes"] - a["upvotes"]);
+
+    res.json(boards);
 });
 
 app.listen(PORT, () => {

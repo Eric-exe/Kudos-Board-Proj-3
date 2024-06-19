@@ -1,8 +1,13 @@
 class API {
-    static async fetchRequest(url, method, body, funct) {
+    static async fetchRequest(url, method, body, funct, concat) {
         try {
-            let fetchInput = {}
-            fetchInput["method"] = method
+            let fetchInput = {
+                "method": method,
+                "headers": {
+                    'Content-Type': 'application/json'
+                }
+            }
+
             if (fetchInput["method"] != "get") {
                 fetchInput["body"] = body
             }
@@ -13,7 +18,7 @@ class API {
                 throw new Error("Failed to GET");
             }
             const data = await response.json();
-            funct(data)
+            funct(concat ? old => [...old, data] : data)
         }
         catch (error) {
             console.error(error)
@@ -25,16 +30,33 @@ class API {
             import.meta.env.VITE_DB_URL + "/user/" + String(id),
             "get",
             {},
-            funct
+            funct,
+            false
         )
     }
 
-    static async getBoardsData(funct) {
+    static async getBoardData(funct) {
         this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/boards",
             "get",
             {},
-            funct
+            funct,
+            false
+        )
+    }
+
+    static async createBoard(funct, authorId, title, imgUrl, category) {
+        this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/boards",
+            "post",
+            JSON.stringify({
+                "authorId": authorId,
+                "title": title,
+                "imgUrl": imgUrl,
+                "category": category
+            }),
+            funct,
+            true
         )
     }
 }

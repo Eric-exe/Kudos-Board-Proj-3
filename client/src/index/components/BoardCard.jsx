@@ -1,10 +1,9 @@
 import propTypes from "prop-types";
-import './Board.css';
-import API from '../../api'
+import "./BoardCard.css";
 
-Board.propTypes = {
+BoardCard.propTypes = {
     board: propTypes.object.isRequired,
-    isOwned: propTypes.bool.isRequired // changes the ui to allow deletion and stops self-upvotes
+    isOwned: propTypes.bool.isRequired, // changes the ui to allow deletion and stops self-upvotes
 };
 
 /*
@@ -17,10 +16,15 @@ board = {
 }
 */
 
-function Board(props) {
+function BoardCard(props) {
     return (
-        <div className={"card m-2 p-0 border border-2 rounded board-card " + (props.isOwned ? "border-success" : "border-primary")}>
-            <img src={props.board["imgUrl"]} className="card-img-top img-thumbnail img-fluid mh-50" alt="Board image"/>
+        <div
+            className={
+                "card m-2 p-0 border border-2 rounded board-card " +
+                (props.isOwned ? "border-success" : "border-primary")
+            }
+        >
+            <img src={props.board["imgUrl"]} className="card-img-top img-thumbnail img-fluid mh-50" alt="Board image" />
 
             <div className="card-body">
                 <div className="card-title d-flex flex-wrap align-items-center">
@@ -28,12 +32,11 @@ function Board(props) {
                     &nbsp;
                     <span className="badge text-bg-secondary">{props.board["category"]}</span>
                 </div>
-                <h6 className="card-text">By: {props.board["authorId"]}</h6>
+                <h6 className="card-text">By: {props.board["author"]["username"]}</h6>
             </div>
 
             <div className="card-footer">
-                {
-                    props.isOwned ? 
+                {props.isOwned ? (
                     <div className="d-flex flex-wrap justify-content-between">
                         <div className="d-flex align-items-center">
                             <i className="bi bi-caret-up-fill h5 m-0"></i>
@@ -42,9 +45,11 @@ function Board(props) {
                             &nbsp;
                             <i className="bi bi-trash-fill h5 m-0 trash"></i>
                         </div>
-                        <button className="btn btn-sm btn-outline-primary">View</button>
+                        <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.board["id"]}>
+                            View
+                        </a>
                     </div>
-                    :
+                ) : (
                     <div className="d-flex flex-wrap justify-content-between">
                         <div className="d-flex align-items-center">
                             <i className="bi bi-caret-up-square h5 upvote m-0"></i>
@@ -54,13 +59,14 @@ function Board(props) {
                             {props.board["upvotes"]}
                         </div>
 
-                        <button className="btn btn-sm btn-outline-primary">View</button>
+                        <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.board["id"]}>
+                            View
+                        </a>
                     </div>
-                }
-                
+                )}
             </div>
         </div>
-    )
+    );
 }
 
-export default Board
+export default BoardCard;

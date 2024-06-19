@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import propTypes from "prop-types";
+import API from "../../api";
 
 BrowseBar.propTypes = {
+    userData: propTypes.array.isRequired,
     category: propTypes.array.isRequired, // 0 -> value, 1 -> function
 };
 
@@ -31,11 +33,24 @@ function BrowseBar(props) {
     // handle the create board button click event
     const handleCreateBoardClick = (event) => {
         event.preventDefault();
-        console.log({ createBoardTitle, createBoardImgURL, createBoardCategory });
+        // sanity check: bad input
         if (createBoardTitle == "" || createBoardImgURL == "" || createBoardCategory == "") {
             return;
         }
-        // if successful, close the modal
+
+        API.createBoard(
+            props.boardDataFunc,
+            props.userData[0]["id"],
+            createBoardTitle,
+            createBoardImgURL,
+            createBoardCategory
+        );
+        
+        // cleanup
+        setCreateBoardTitle("");
+        setCreateBoardImgURL("");
+        setCreateBoardCategory("");
+        document.getElementById("createBoard-category").selectedIndex = 0;
         bootstrap.Modal.getInstance(document.getElementById("createBoardModal")).hide();
     };
 
