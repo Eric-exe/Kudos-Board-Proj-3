@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import propTypes from "prop-types";
-import API from "../../api";
-import utils from "../../utils";
+import API from "../../../api";
+import utils from "../../../utils";
 
 BrowseBar.propTypes = {
     userData: propTypes.array.isRequired,
