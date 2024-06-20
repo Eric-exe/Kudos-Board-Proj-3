@@ -27,8 +27,8 @@ function BrowseBar(props) {
     // handle the search bar update event, using debounce to prevent spamming API
     const handleSearchBarUpdate = (event) => {
         const debouncedSearchFn = debounce(() => {
-            API.getBoardData(props.boardDataFunc, { title: event.target.value });
-        }, 300);
+            API.getBoardsData(props.boardDataFunc, { title: event.target.value });
+        }, 200);
 
         debouncedSearchFn();
     };
@@ -72,7 +72,7 @@ function BrowseBar(props) {
                 button.classList.remove("active");
             }
         });
-        API.getBoardData(props.boardDataFunc, utils.toFilterObject(props.filter[0], props.userData[0]["id"]));
+        API.getBoardsData(props.boardDataFunc, utils.toFilterObject(props.filter[0], props.userData[0]["id"]));
     }, [props.filter[0]]);
 
     return (

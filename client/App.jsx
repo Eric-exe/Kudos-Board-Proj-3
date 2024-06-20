@@ -18,7 +18,7 @@ function App() {
     // initialize the user/boards when loaded
     useEffect(() => {
         API.getUserData(setUserData, userData["id"]);
-        API.getBoardData(setBoardData, {});
+        API.getBoardsData(setBoardData, {});
     }, []);
 
     // whenever boardData changes, update user data as well
@@ -28,25 +28,28 @@ function App() {
     }, [boardData]);
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route
-                    index
-                    element={
-                        <HomePage
-                            userData={[userData, setUserData]}
-                            boardData={[boardData, setBoardData]}
-                        />
-                    }
-                />
-                <Route path="board/:boardId" element={
-                    <BoardPage 
-                        userData={[userData, setUserData]}
+        <>
+            <header className="d-flex justify-content-between text-white bg-primary px-3 py-2">
+                <h2 className="m-0">Kudos Board</h2>
+                <button type="button" className="btn btn-outline-light">
+                    {userData["username"]}
+                </button>
+            </header>
+
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        index
+                        element={<HomePage userData={[userData, setUserData]} boardData={[boardData, setBoardData]} />}
                     />
-                    } 
-                />
-            </Routes>
-        </BrowserRouter>
+                    <Route path="board/:boardId" element={<BoardPage userData={[userData, setUserData]} />} />
+                </Routes>
+            </BrowserRouter>
+
+            <footer className="d-flex justify-content-center text-white bg-primary p-2">
+                <p className="m-0">Kudos Board</p>
+            </footer>
+        </>
     );
 }
 

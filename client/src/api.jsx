@@ -5,7 +5,7 @@ class API {
                 "method": method,
                 "headers": {
                     'Content-Type': 'application/json'
-                }
+                },
             }
 
             if (fetchInput["method"] != "get") {
@@ -14,7 +14,6 @@ class API {
 
             const response = await fetch(url, fetchInput)
             if (!response || !response.ok) {
-                console.log(url);
                 throw new Error("Failed to GET");
             }
             const data = await response.json();
@@ -29,13 +28,13 @@ class API {
         this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/user/" + String(id),
             "get",
-            {},
+            "",
             funct,
             false
         )
     }
 
-    static async getBoardData(funct, filters) {
+    static async getBoardsData(funct, filters) {
         let url = import.meta.env.VITE_DB_URL + "/boards?";
         for (const key in filters) {
             url += key + "=" + filters[key] + "&";
@@ -44,7 +43,17 @@ class API {
         this.fetchRequest(
             url,
             "get",
-            {},
+            "",
+            funct,
+            false
+        )
+    }
+
+    static async getBoardData(funct, id) {
+        this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/boards/" + String(id),
+            "get",
+            "",
             funct,
             false
         )
@@ -72,6 +81,16 @@ class API {
             JSON.stringify({
                 "authorId": authorId
             }),
+            funct,
+            false
+        )
+    }
+
+    static async getGIFsData(funct, query) {
+        this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/gifs/" + query,
+            "get",
+            "",
             funct,
             false
         )

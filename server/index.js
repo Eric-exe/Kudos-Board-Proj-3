@@ -11,12 +11,21 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+// utils
+function send(res, obj, err) {
+    if (obj) {
+        res.send(obj)
+    }
+    else {
+        res.status(404).send(err)
+    }
+}
 
 // User routes
 app.post("/register", async (req, res) => {
     // verify body is good
     const { username, password } = req.body || {};
-    if (username == undefined) {
+    if (username == undefined || password == undefined) {
         res.status(400).send("Bad username or password");
         return;
     }
@@ -47,7 +56,7 @@ app.get("/user/:id", async (req, res) => {
     }
 
     const user = await prisma.User.findUnique({
-        where: { id: parseInt(req.params.id) },
+        where: { id },
         include: {
             boardsCreated: true,
             cardsCreated: true,
@@ -59,10 +68,9 @@ app.get("/user/:id", async (req, res) => {
 
     if (user) {
         delete user["password"];
-        res.json(user);
-    } else {
-        res.status(404).send("No user found");
     }
+
+    send(res, user, "No user found")
 });
 
 // Board routes
@@ -118,6 +126,22 @@ app.get("/boards", async (req, res) => {
     res.json(boards);
 });
 
+app.get('/boards/:id', async (req, res) => {
+    const id = parseInt(req.params.id) || undefined;
+
+    if (id == undefined) {
+        res.status(400).send("Bad id")
+        return
+    }
+
+    const board = await prisma.Board.findUnique({
+        where: { id },
+        include: { author: true, cards: true }
+    })
+
+    send(res, board, "No board found")
+})
+
 app.delete('/boards/:id', async (req, res) => {
     const id = parseInt(req.params.id) || undefined;
     const authorId = parseInt(req.body.authorId) || undefined;
@@ -134,13 +158,24 @@ app.delete('/boards/:id', async (req, res) => {
         },
     });
 
-    if (!board) {
-        res.status(404).send("No board found");
-        return;
+    send(res, board, "No board found")
+});
+
+// external API call
+app.get('/gifs/:query', async (req, res) => {
+    const query = req.params.query;
+    if (query == "") {
+        res.json("");
+        return
     }
 
-    res.json(board);
-});
+    let url = "http://api.giphy.com/v1/gifs/search?api_key=" + process.env.GIPHY_KEY + "&q=" + query;
+    const response = await fetch(url)
+    if (!response || !response.ok) {
+        throw new Error("Failed to fetch from GIPHY");
+    }
+    res.json(await response.json())
+})
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
