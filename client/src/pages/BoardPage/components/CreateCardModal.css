@@ -1,0 +1,8 @@
+.gifsContainer {
+    max-height: 45vh;
+    overflow: auto;
+}
+
+.gif:hover {
+    cursor: pointer;
+}

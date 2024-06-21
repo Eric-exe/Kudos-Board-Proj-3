@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import propTypes from "prop-types";
-import API from "../../api";
-import utils from "../../utils";
+import API from "../../../api";
 
 BrowseBar.propTypes = {
     userData: propTypes.array.isRequired,
     boardDataFunc: propTypes.func.isRequired,
     filter: propTypes.array.isRequired, 
 };
+
+function toFilterObject(filterValue, userId) {
+    const filters = {
+        "All": {},
+        "Recent": { recent: true },
+        "Created": { authorId: userId },
+        "Category": { category: filterValue }
+    };
+
+    return filters[filterValue] || filters["Category"];
+}
 
 function BrowseBar(props) {
     // handle the category button click event
@@ -27,8 +37,8 @@ function BrowseBar(props) {
     // handle the search bar update event, using debounce to prevent spamming API
     const handleSearchBarUpdate = (event) => {
         const debouncedSearchFn = debounce(() => {
-            API.getBoardData(props.boardDataFunc, { title: event.target.value });
-        }, 300);
+            API.getBoardsData(props.boardDataFunc, { title: event.target.value });
+        }, 200);
 
         debouncedSearchFn();
     };
@@ -39,14 +49,14 @@ function BrowseBar(props) {
     const [createBoardCategory, setCreateBoardCategory] = useState("");
 
     // handle the create board button click event
-    const handleCreateBoardClick = (event) => {
+    const handleCreateBoardClick = async (event) => {
         event.preventDefault();
         // sanity check: bad input
         if (createBoardTitle == "" || createBoardImgURL == "" || createBoardCategory == "") {
             return;
         }
 
-        API.createBoard(
+        await API.createBoard(
             props.boardDataFunc,
             props.userData[0]["id"],
             createBoardTitle,
@@ -54,6 +64,7 @@ function BrowseBar(props) {
             createBoardCategory
         );
 
+        API.getUserData(props.userData[1], props.userData[0]["id"]);
         // cleanup
         setCreateBoardTitle("");
         setCreateBoardImgURL("");
@@ -72,13 +83,13 @@ function BrowseBar(props) {
                 button.classList.remove("active");
             }
         });
-        API.getBoardData(props.boardDataFunc, utils.toFilterObject(props.filter[0], props.userData[0]["id"]));
+        API.getBoardsData(props.boardDataFunc, toFilterObject(props.filter[0], props.userData[0]["id"]));
     }, [props.filter[0]]);
 
     return (
         <>
             <div className="d-flex justify-content-center">
-                <div className="col-7 pt-4">
+                <div className="col-7 pt-1">
                     <input
                         className="form-control bg-light border border-primary mb-1"
                         type="text"
