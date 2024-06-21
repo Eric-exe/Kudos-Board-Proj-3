@@ -1,10 +1,19 @@
 import { useState } from 'react'
 import './CreateCardModal.css'
 import API from '../../../api'
+import propTypes from 'prop-types'
 
-function CreateCardModal() {
+CreateCardModal.propTypes = {
+    userData: propTypes.array.isRequired,
+    boardId: propTypes.string.isRequired,
+    currentBoardDataFunc: propTypes.func.isRequired
+}
+
+function CreateCardModal(props) {
+    const [cardContent, setCardContent] = useState("")
     const [GIFsData, setGIFsData] = useState(undefined)
     const [GIFUrl, setGIFUrl] = useState("")
+    const [cardSigned, setCardSigned] = useState(false)
 
     let searchDebounceTimer = null;
     const debounce = (func, delay) => {
@@ -22,8 +31,9 @@ function CreateCardModal() {
         debouncedSearchFn();
     };
 
-    const handleCreateCard = (event) => {
-        
+    const handleCreateCard = () => {
+        API.createCard(() => {}, props.userData[0]["id"], props.boardId, cardContent, GIFUrl, cardSigned);
+        bootstrap.Modal.getInstance(document.getElementById("createCardModal")).hide();
     }
 
     return (
@@ -48,7 +58,7 @@ function CreateCardModal() {
                         </div>
                         <div className="modal-body">
                             Card Message:
-                            <textarea className="form-control" id="cardContentBox" rows="3"></textarea>
+                            <textarea className="form-control" id="cardContentBox" rows="3" value={cardContent} onChange={(event) => setCardContent(event.target.value)}></textarea>
                             <div className="row mt-2 align-items-center">
                                 <div className="col-3">Search GIPHY:</div>
                                 <div className="col-9">
@@ -77,7 +87,7 @@ function CreateCardModal() {
                             </div>
                             
                             <div className="form-check form-switch mt-2">
-                                <input className="form-check-input" type="checkbox" id="signToggle"/>
+                                <input className="form-check-input" type="checkbox" id="signToggle" onChange={(event) => setCardSigned(event.target.value)}/>
                                 <label className="form-check-label" htmlFor="signToggle">Sign Card</label>
                             </div>
                         </div>

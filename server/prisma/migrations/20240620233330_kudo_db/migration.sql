@@ -24,8 +24,7 @@ CREATE TABLE "Card" (
     "authorId" INTEGER NOT NULL,
     "boardId" INTEGER NOT NULL,
     "signed" BOOLEAN NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
     "gifUrl" TEXT NOT NULL,
     "likes" INTEGER NOT NULL,
 

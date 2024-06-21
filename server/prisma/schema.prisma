@@ -19,9 +19,8 @@ model User {
     password            String
     boardsCreated       Board[]
     cardsCreated        Card[] @relation("cardsCreated")
-    cardsLiked          Card[] @relation("cardsLiked")
-    cardsDisliked       Card[] @relation("cardsDisliked")
     commentsCreated     Comment[]
+    cardsLiked          Card[] @relation("cardsLiked")
 }
 
 model Board {
@@ -41,13 +40,11 @@ model Card {
     board               Board @relation(fields: [boardId], references: [id])
     boardId             Int
     signed              Boolean
-    title               String
-    description         String
+    content             String
     gifUrl              String
     comments            Comment[]
     likes               Int
     usersLiked          User[] @relation("cardsLiked")
-    usersDisliked       User[] @relation("cardsDisliked")
 }
 
 model Comment {

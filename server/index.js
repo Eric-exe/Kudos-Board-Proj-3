@@ -14,10 +14,9 @@ const PORT = process.env.PORT || 3000;
 // utils
 function send(res, obj, err) {
     if (obj) {
-        res.send(obj)
-    }
-    else {
-        res.status(404).send(err)
+        res.send(obj);
+    } else {
+        res.status(404).send(err);
     }
 }
 
@@ -60,9 +59,8 @@ app.get("/user/:id", async (req, res) => {
         include: {
             boardsCreated: true,
             cardsCreated: true,
+            commentsCreated: true,
             cardsLiked: true,
-            cardsDisliked: true,
-            commentsCreated: true
         },
     });
 
@@ -70,7 +68,7 @@ app.get("/user/:id", async (req, res) => {
         delete user["password"];
     }
 
-    send(res, user, "No user found")
+    send(res, user, "No user found");
 });
 
 // Board routes
@@ -79,13 +77,13 @@ app.post("/boards", async (req, res) => {
 
     const newBoard = await prisma.Board.create({
         data: {
-            authorId: authorId,
-            title: title,
-            imgUrl: imgUrl,
-            category: category,
-            cards: {}
+            authorId,
+            title,
+            imgUrl,
+            category,
+            cards: {},
         },
-        include: { author: true}
+        include: { author: true },
     });
 
     delete newBoard["author"]["password"];
@@ -102,10 +100,10 @@ app.get("/boards", async (req, res) => {
         whereObj = { authorId: parseInt(req.query.authorId) };
     }
     if (req.query.title) {
-        whereObj = { 
-            title: { 
+        whereObj = {
+            title: {
                 contains: req.query.title,
-                mode: "insensitive" 
+                mode: "insensitive",
             },
         };
     }
@@ -126,23 +124,27 @@ app.get("/boards", async (req, res) => {
     res.json(boards);
 });
 
-app.get('/boards/:id', async (req, res) => {
+app.get("/boards/:id", async (req, res) => {
     const id = parseInt(req.params.id) || undefined;
 
     if (id == undefined) {
-        res.status(400).send("Bad id")
-        return
+        res.status(400).send("Bad id");
+        return;
     }
 
     const board = await prisma.Board.findUnique({
         where: { id },
-        include: { author: true, cards: true }
-    })
+        include: { author: true, cards: true },
+    });
 
-    send(res, board, "No board found")
-})
+    if (board) {
+        delete board["author"]["password"];
+    }
 
-app.delete('/boards/:id', async (req, res) => {
+    send(res, board, "No board found");
+});
+
+app.delete("/boards/:id", async (req, res) => {
     const id = parseInt(req.params.id) || undefined;
     const authorId = parseInt(req.body.authorId) || undefined;
 
@@ -152,30 +154,47 @@ app.delete('/boards/:id', async (req, res) => {
     }
 
     const board = await prisma.Board.delete({
-        where: { 
-            id: id, 
-            authorId: authorId
-        },
+        where: { id, authorId },
     });
 
-    send(res, board, "No board found")
+    send(res, board, "No board found");
+});
+
+app.post("/card", async (req, res) => {
+    let { authorId, boardId, content, gifUrl, signed } = req.body || undefined;
+    authorId = parseInt(authorId);
+    boardId = parseInt(boardId);
+    const newCard = await prisma.Card.create({
+        data: {
+            authorId,
+            boardId,
+            content,
+            signed,
+            gifUrl,
+            comments: {},
+            likes: 0,
+            usersLiked: {},
+        }
+    });
+
+    res.json(newCard);
 });
 
 // external API call
-app.get('/gifs/:query', async (req, res) => {
+app.get("/gifs/:query", async (req, res) => {
     const query = req.params.query;
     if (query == "") {
         res.json("");
-        return
+        return;
     }
 
     let url = "http://api.giphy.com/v1/gifs/search?api_key=" + process.env.GIPHY_KEY + "&q=" + query;
-    const response = await fetch(url)
+    const response = await fetch(url);
     if (!response || !response.ok) {
         throw new Error("Failed to fetch from GIPHY");
     }
-    res.json(await response.json())
-})
+    res.json(await response.json());
+});
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

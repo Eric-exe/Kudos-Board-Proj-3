@@ -20,6 +20,7 @@ class API {
             funct(concat ? old => [...old, data] : data)
         }
         catch (error) {
+            funct(-1)
             console.error(error)
         }
     }
@@ -63,12 +64,7 @@ class API {
         this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/boards",
             "post",
-            JSON.stringify({
-                "authorId": authorId,
-                "title": title,
-                "imgUrl": imgUrl,
-                "category": category
-            }),
+            JSON.stringify({authorId, title, imgUrl, category}),
             funct,
             true
         )
@@ -78,9 +74,7 @@ class API {
         this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/boards/" + String(id),
             "delete",
-            JSON.stringify({
-                "authorId": authorId
-            }),
+            JSON.stringify({authorId}),
             funct,
             false
         )
@@ -95,6 +89,16 @@ class API {
             false
         )
     }
+
+    static async createCard(funct, authorId, boardId, content, gifUrl, signed) {
+        this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/card",
+            "post",
+            JSON.stringify({authorId, boardId, content, gifUrl, signed}),
+            funct,
+            true
+        )
+    }
 }
 
-export default API
+export default API;
