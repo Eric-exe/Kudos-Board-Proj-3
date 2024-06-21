@@ -68,12 +68,12 @@ function Card(props) {
                     <div className="d-flex align-items-center justify-content-between">
                         <div className="d-flex align-items-center">
                             <i
-                                className={"h4 bi bi-caret-up-fill m-0 " + (isLiked ? "like-active" : "")}
+                                className={"h4 bi bi-caret-up-fill m-0 like " + (isLiked ? "like-active" : "")}
                                 onClick={() => setIsLiked((old) => !old)}
                             />
                             {props.card["likes"]} &nbsp;
                             {props.isOwned ? (
-                                <i className="h5 bi bi-trash-fill m-0" onClick={handleDeleteCard}></i>
+                                <i className="trash h5 bi bi-trash-fill m-0" onClick={handleDeleteCard}></i>
                             ) : (
                                 <></>
                             )}

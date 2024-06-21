@@ -5,3 +5,19 @@
 .like-active {
     color: #198754;
 }
+
+.like {
+    transition: all 0.2s;
+}
+
+.like:hover {
+    color: #198754;
+}
+
+.trash {
+    transition: all 0.2s;
+}
+
+.trash:hover {
+    color: #dc3545;
+}

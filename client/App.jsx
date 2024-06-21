@@ -43,7 +43,7 @@ function App() {
                 </Routes>
             </Router>
 
-            <footer className="d-flex justify-content-center text-white bg-primary p-2">
+            <footer className="d-flex justify-content-center text-white bg-primary p-2 mt-2">
                 <p className="m-0">Kudos Board</p>
             </footer>
         </>

@@ -18,18 +18,6 @@
     color: #198754;
 }
 
-.downvote {
-    transition: all 0.2s;
-}
-
-.downvote:hover {
-    color: #dc3545;
-}
-
-.downvote-active {
-    color: #dc3545;
-}
-
 .trash {
     transition: all 0.2s;
 }
