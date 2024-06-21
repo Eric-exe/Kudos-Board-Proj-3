@@ -90,7 +90,7 @@ class API {
         return this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/card/" + String(id),
             "delete",
-            JSON.stringify({ authorId }),
+            JSON.stringify({ id, authorId }),
             () => {},
             false
         );

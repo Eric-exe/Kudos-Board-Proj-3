@@ -76,7 +76,7 @@ router.post("/like/:id", async (req, res) => {
     res.json("Liked card");
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     const id = parseInt(req.params.id) || undefined;
     const authorId = parseInt(req.body.authorId) || undefined;
 
@@ -85,7 +85,7 @@ router.delete('/:id', (req, res) => {
         return;
     }
 
-    const card = prisma.Card.delete({
+    const card = await prisma.Card.delete({
         where: { id, authorId },
     });
 

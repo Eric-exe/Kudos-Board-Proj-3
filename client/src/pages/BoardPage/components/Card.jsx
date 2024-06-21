@@ -20,8 +20,8 @@ function Card(props) {
     // handles the like/unlike event, updating user and board too
     const likeCardFn = async () => {
         await API.likeCard(props.card["id"], props.userData[0]["id"], isLiked);
-        API.getBoardData(props.currentBoardDataFunc, props.boardId);
         API.getUserData(props.userData[1], props.userData[0]["id"]);
+        API.getBoardData(props.currentBoardDataFunc, props.boardId);
     };
 
     useEffect(() => {
@@ -30,6 +30,13 @@ function Card(props) {
             likeCardFn();
         }
     }, [isLiked]);
+
+    // handle the deletion of a card
+    const handleDeleteCard = async () => {
+        await API.deleteCard(props.card["id"], props.userData[0]["id"]);
+        API.getUserData(props.userData[1], props.userData[0]["id"]);
+        API.getBoardData(props.currentBoardDataFunc, props.boardId);
+    };
 
     return (
         <div className={"card m-2 border border-2 " + (props.isOwned ? "border-success" : "border-primary")}>
@@ -48,7 +55,13 @@ function Card(props) {
                         className={"h4 bi bi-caret-up-fill m-0 " + (isLiked ? "like-active" : "")}
                         onClick={() => setIsLiked((old) => !old)}
                     />
-                    {props.card["likes"]}
+                    {props.card["likes"]} &nbsp;
+                    {
+                        props.isOwned ? 
+                        <i className="h5 bi bi-trash-fill m-0" onClick={handleDeleteCard}></i>
+                        :
+                        <></>
+                    }
                 </div>
             </div>
         </div>
