@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import API from './api'
+import { useState } from "react";
+import API from "./api";
 import propTypes from "prop-types";
 
 LoginForm.propTypes = {
@@ -12,36 +12,47 @@ function LoginForm(props) {
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState("");
 
-    const handleResponse = (response) => {
-        if (response.status == 409) {
-            setStatus("Username already taken");
-        }
-        else if (response.status == 400) {
+    const handleResponse = (response, isRegister) => {
+        if (response.status == 400) {
             setStatus("Bad username or password");
+            return;
         }
-        else {
-            bootstrap.Modal.getInstance(document.getElementById("loginFormModal")).hide();
-            // reflect the board data to match up to that of the user
-            setUsername("");
-            setPassword("");
-            setStatus("");
+
+        if (response.status == 409) {
+            if (isRegister) {
+                setStatus("Username taken");
+            } else {
+                setStatus("Bad username or password");
+            }
+            return;
         }
-    }
+
+        bootstrap.Modal.getInstance(document.getElementById("loginFormModal")).hide();
+        // reflect the board data to match up to that of the user
+        setUsername("");
+        setPassword("");
+        setStatus("");
+    };
 
     const handleRegister = async () => {
         let response = await API.registerUser(props.userData[1], username, password);
         console.log("UP>", props.userData[0]);
-        handleResponse(response);
-    }
+        handleResponse(response, true);
+    };
 
     const handleLogin = async () => {
         let response = await API.loginUser(props.userData[1], username, password);
-        handleResponse(response);
-    }
+        handleResponse(response, false);
+    };
 
     return (
         <>
-            <button type="button" className="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginFormModal">
+            <button
+                type="button"
+                className="btn btn-outline-light"
+                data-bs-toggle="modal"
+                data-bs-target="#loginFormModal"
+            >
                 {props.userData[0]["username"]}
             </button>
 
@@ -50,27 +61,40 @@ function LoginForm(props) {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title text-dark">Login</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
                         </div>
                         <div className="modal-body text-dark">
                             <p className="text-danger">{status}</p>
                             <div className="row mb-2 align-items-center">
-                                <div className="col-3">
-                                    Username:
-                                </div>
+                                <div className="col-3">Username:</div>
 
                                 <div className="col-9">
-                                    <input type="text" className="form-control" id="usernameInput" onChange={(event) => setUsername(event.target.value)} value={username}/>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="usernameInput"
+                                        onChange={(event) => setUsername(event.target.value)}
+                                        value={username}
+                                    />
                                 </div>
                             </div>
 
                             <div className="row align-items-center">
-                                <div className="col-3">
-                                    Password:
-                                </div>
+                                <div className="col-3">Password:</div>
 
                                 <div className="col-9">
-                                    <input type="password" className="form-control" id="passwordInput" onChange={(event) => setPassword(event.target.value)} value={password}/>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        id="passwordInput"
+                                        onChange={(event) => setPassword(event.target.value)}
+                                        value={password}
+                                    />
                                 </div>
                             </div>
                         </div>

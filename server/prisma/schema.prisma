@@ -25,19 +25,19 @@ model User {
 
 model Board {
     id                  Int  @id @default(autoincrement())
-    author              User @relation(fields: [authorId], references: [id])
+    author              User @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId            Int
     title               String
     imgUrl              String
     category            String
-    cards               Card[]
+    cards               Card[] 
 }
 
 model Card {
     id                  Int @id @default(autoincrement())
-    author              User @relation("cardsCreated", fields: [authorId], references: [id])
+    author              User @relation("cardsCreated", fields: [authorId], references: [id], onDelete: Cascade)
     authorId            Int
-    board               Board @relation(fields: [boardId], references: [id])
+    board               Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
     boardId             Int
     signed              Boolean
     content             String
@@ -49,9 +49,9 @@ model Card {
 
 model Comment {
     id                  Int @id @default(autoincrement())
-    author              User @relation(fields: [authorId], references: [id])
+    author              User @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId            Int
-    card                Card @relation(fields: [cardId], references: [id])
+    card                Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
     cardId              Int
     content             String
 }

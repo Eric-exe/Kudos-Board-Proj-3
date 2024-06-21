@@ -15,8 +15,7 @@ BoardCard.propTypes = {
 function BoardCard(props) {
     // handle the deletion of a board card
     const handleDeleteBoardCard = () => {
-        API.deleteBoard(() => {}, props.currentBoardCard["id"], props.userData["id"]);
-        // delete from boardData state
+        API.deleteBoard(props.currentBoardCard["id"], props.userData["id"]);
         props.boardData[1](props.boardData[0].filter((board) => board["id"] !== props.currentBoardCard["id"]));
     };
 

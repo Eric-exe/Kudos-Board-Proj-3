@@ -1,6 +1,6 @@
 import propTypes from "prop-types";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import API from "../../api";
 import CreateCardModal from "./components/CreateCardModal";
 import Card from "./components/Card";
@@ -14,23 +14,21 @@ function BoardPage(props) {
     const [currentBoardData, setCurrentBoardData] = useState(undefined);
     // fetch the latest data on init
     useEffect(() => {
-        console.log(props.userData[0]["username"]);
         API.getUserData(props.userData[1], props.userData[0]["id"]);
         API.getBoardData(setCurrentBoardData, boardId);
     }, []);
 
-    
+    const navigate = useNavigate();
 
     return (
         <>
+            <i className="m-2 h2 bi bi-caret-left-fill" onClick={() => navigate("/")}></i>
             {currentBoardData == undefined ? (
-                <div>Loading...</div>
-            ) : currentBoardData == -1 ? (
-                <div>No board found</div>
+                <></>
             ) : (
                 <>
                     <div className="">
-                        <div className="d-flex flex-wrap align-items-center justify-content-center mt-4">
+                        <div className="d-flex flex-wrap align-items-center justify-content-center">
                             <h2 className="m-0 text-wrap text-break">{currentBoardData["title"]}</h2>
                             &nbsp;
                             <span className="d-inline-block badge bg-secondary">{currentBoardData["category"]}</span>

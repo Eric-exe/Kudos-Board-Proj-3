@@ -89,7 +89,7 @@ function BrowseBar(props) {
     return (
         <>
             <div className="d-flex justify-content-center">
-                <div className="col-7 pt-4">
+                <div className="col-7 pt-1">
                     <input
                         className="form-control bg-light border border-primary mb-1"
                         type="text"

@@ -13,6 +13,13 @@ function HomePage(props) {
 
     return (
         <>
+            {/* Banner */}
+            <h1 className="text-primary text-center pt-3">
+                <i className="bi bi-star-fill"></i>
+                &nbsp; Kudos Board &nbsp;
+                <i className="bi bi-star-fill"></i>
+            </h1>
+
             <BrowseBar userData={props.userData} boardDataFunc={props.boardData[1]} filter={[filter, setFilter]} />
 
             <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 justify-content-center w-100">

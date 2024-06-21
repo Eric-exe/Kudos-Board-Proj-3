@@ -21,7 +21,6 @@ class API {
             funct(concat ? (old) => [...old, data] : data);
             return data;
         } catch (error) {
-            funct(-1);
             console.error(error);
         }
     }
@@ -55,7 +54,7 @@ class API {
 
     static async deleteBoard(id, authorId) {
         return await this.fetchRequest(
-            import.meta.env.VITE_DB_URL + "/boards/" + String(id),
+            import.meta.env.VITE_DB_URL + `/boards/${id}`,
             "delete",
             JSON.stringify({ authorId }),
             () => {},
@@ -79,7 +78,7 @@ class API {
 
     static async likeCard(cardId, userId, isLiked) {
         return await this.fetchRequest(
-            import.meta.env.VITE_DB_URL + "/card/like/" + String(cardId),
+            import.meta.env.VITE_DB_URL + `/card/like/${cardId}`,
             "post",
             JSON.stringify({ userId, isLiked }),
             () => {},
@@ -89,7 +88,7 @@ class API {
 
     static async deleteCard(id, authorId) {
         return await this.fetchRequest(
-            import.meta.env.VITE_DB_URL + "/card/" + String(id),
+            import.meta.env.VITE_DB_URL + `/card/${id}`,
             "delete",
             JSON.stringify({ id, authorId }),
             () => {},
@@ -113,6 +112,16 @@ class API {
             "post",
             JSON.stringify({ username, password }),
             funct,
+            false
+        )
+    }
+    
+    static async createComment(cardId, authorId, content) {
+        return await this.fetchRequest(
+            import.meta.env.VITE_DB_URL + `/card/${cardId}/comment`,
+            "post",
+            JSON.stringify({ authorId, content }),
+            () => {},
             false
         )
     }

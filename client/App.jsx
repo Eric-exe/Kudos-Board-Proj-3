@@ -23,10 +23,6 @@ function App() {
         API.getBoardsData(setBoardData, {});
     }, []);
 
-    useEffect(() => {
-        console.log("UPDATED: ", userData);
-    }, [userData]);
-
     return (
         <>
             <header className="d-flex justify-content-between text-white bg-primary px-3 py-2">

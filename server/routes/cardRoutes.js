@@ -22,7 +22,6 @@ router.post("/", async (req, res) => {
     res.json(newCard);
 });
 
-
 router.post("/like/:id", async (req, res) => {
     const id = parseInt(req.params.id) || undefined;
     const userId = parseInt(req.body.userId) || undefined;
@@ -76,7 +75,7 @@ router.post("/like/:id", async (req, res) => {
     res.json("Liked card");
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
     const id = parseInt(req.params.id) || undefined;
     const authorId = parseInt(req.body.authorId) || undefined;
 
@@ -91,10 +90,29 @@ router.delete('/:id', async (req, res) => {
 
     if (card) {
         res.json(card);
-    }
-    else {
+    } else {
         res.status(404).send("No card found");
     }
+});
+
+router.post("/:id/comment", async (req, res) => {
+    const cardId = parseInt(req.params.id) || undefined;
+    const { authorId, content } = req.body || undefined;
+
+    if (cardId == undefined || authorId == undefined || content == undefined) {
+        res.status(400).send("Bad data");
+        return;
+    }
+
+    const newComment = await prisma.Comment.create({
+        data: {
+            authorId,
+            cardId,
+            content,
+        },
+    });
+
+    res.json(newComment);
 });
 
 module.exports = router;

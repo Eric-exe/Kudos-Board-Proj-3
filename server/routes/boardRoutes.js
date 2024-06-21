@@ -14,12 +14,14 @@ router.post("/", async (req, res) => {
             category,
             cards: {},
         },
-        include: { author: {
-            select: {
-                id: true,
-                username: true,
-            }
-        } },
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                },
+            },
+        },
     });
 
     res.json(newBoard);
@@ -87,6 +89,15 @@ router.get("/:id", async (req, res) => {
                             username: true,
                         },
                     },
+                    comments: {
+                        include: {
+                            author: {
+                                select: {
+                                    username: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
         },
@@ -105,12 +116,13 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     const id = parseInt(req.params.id) || undefined;
     const authorId = parseInt(req.body.authorId) || undefined;
-
+    
     if (id == undefined) {
         res.status(400).send("Bad id");
         return;
     }
 
+    // only allow deletion if author
     const board = await prisma.Board.delete({
         where: { id, authorId },
     });
