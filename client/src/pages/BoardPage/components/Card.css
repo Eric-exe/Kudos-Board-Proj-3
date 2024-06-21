@@ -1,3 +1,7 @@
-.card-body {
-    max-height: 15vh;
+.gif-card-body {
+    max-height: 20vh;
+}
+
+.like-active {
+    color: #198754;
 }

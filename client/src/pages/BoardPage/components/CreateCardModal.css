@@ -1,6 +1,6 @@
 .gifsContainer {
     max-height: 45vh;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .gif:hover {

@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import propTypes from "prop-types";
 import API from "../../../api";
-import utils from "../../../utils";
 
 BrowseBar.propTypes = {
     userData: propTypes.array.isRequired,
     boardDataFunc: propTypes.func.isRequired,
     filter: propTypes.array.isRequired, 
 };
+
+function toFilterObject(filterValue, userId) {
+    const filters = {
+        "All": {},
+        "Recent": { recent: true },
+        "Created": { authorId: userId },
+        "Category": { category: filterValue }
+    };
+
+    return filters[filterValue] || filters["Category"];
+}
 
 function BrowseBar(props) {
     // handle the category button click event
@@ -72,7 +82,7 @@ function BrowseBar(props) {
                 button.classList.remove("active");
             }
         });
-        API.getBoardsData(props.boardDataFunc, utils.toFilterObject(props.filter[0], props.userData[0]["id"]));
+        API.getBoardsData(props.boardDataFunc, toFilterObject(props.filter[0], props.userData[0]["id"]));
     }, [props.filter[0]]);
 
     return (

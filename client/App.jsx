@@ -6,11 +6,12 @@ import API from "./src/api";
 
 function App() {
     const [userData, setUserData] = useState({
-        id: 1,
+        id: -1,
         username: "Guest",
         boardsCreated: [],
-        boardsLiked: [],
-        boardsDisliked: [],
+        cardsCreated: [],
+        cardsLiked: [],
+        commentsCreated: [],
     });
     // boardData handles all boards data being displayed in homepage
     const [boardData, setBoardData] = useState([]);

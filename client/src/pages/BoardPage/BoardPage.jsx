@@ -12,17 +12,12 @@ BoardPage.propTypes = {
 function BoardPage(props) {
     const { boardId } = useParams();
     const [currentBoardData, setCurrentBoardData] = useState(undefined);
-    const [jsonStr, setJsonStr] = useState("");
 
-    // fetch the latest board data on init
+    // fetch the latest data on init
     useEffect(() => {
+        API.getUserData(props.userData[1], props.userData[0]["id"]);
         API.getBoardData(setCurrentBoardData, boardId);
     }, []);
-
-    useEffect(() => {
-        setJsonStr(JSON.stringify(currentBoardData));
-        console.log(props.userData[0])
-    }, [currentBoardData]);
 
     return (
         <>
@@ -34,7 +29,7 @@ function BoardPage(props) {
                 <>
                     <div className="">
                         <div className="d-flex flex-wrap align-items-center justify-content-center mt-4">
-                            <h2 className="d-inline-block align m-0">{currentBoardData["title"]}</h2>
+                            <h2 className="d-inline-block align m-0 text-wrap text-break">{currentBoardData["title"]}</h2>
                             &nbsp;
                             <span className="d-inline-block badge bg-secondary">{currentBoardData["category"]}</span>
                         </div>
@@ -57,6 +52,8 @@ function BoardPage(props) {
                                     <Card
                                         key={index}
                                         card={card}
+                                        boardId={boardId}
+                                        currentBoardDataFunc={setCurrentBoardData}
                                         userData={props.userData}
                                         isOwned={props.userData[0]["cardsCreated"].some(
                                             (createdCard) => createdCard["id"] === card["id"]
@@ -68,8 +65,6 @@ function BoardPage(props) {
                     </div>
                 </>
             )}
-
-            {jsonStr}
         </>
     );
 }

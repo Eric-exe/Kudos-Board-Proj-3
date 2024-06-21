@@ -26,13 +26,17 @@ function CreateCardModal(props) {
     // handle the search bar update event, using debounce to prevent spamming API
     const handleSearchGIFChange = (event) => {
         const debouncedSearchFn = debounce(() => {
+            if (event.target.value == "") {
+                return;
+            }
             API.getGIFsData(setGIFsData, event.target.value)
         }, 200);
         debouncedSearchFn();
     };
 
-    const handleCreateCard = () => {
-        API.createCard(() => {}, props.userData[0]["id"], props.boardId, cardContent, GIFUrl, cardSigned);
+    const handleCreateCard = async () => {
+        await API.createCard(props.userData[0]["id"], props.boardId, cardContent, GIFUrl, cardSigned);
+        API.getBoardData(props.currentBoardDataFunc, props.boardId);
         bootstrap.Modal.getInstance(document.getElementById("createCardModal")).hide();
     }
 
@@ -87,7 +91,7 @@ function CreateCardModal(props) {
                             </div>
                             
                             <div className="form-check form-switch mt-2">
-                                <input className="form-check-input" type="checkbox" id="signToggle" onChange={(event) => setCardSigned(event.target.value)}/>
+                                <input className="form-check-input" type="checkbox" id="signToggle" onChange={(event) => setCardSigned(event.target.checked)}/>
                                 <label className="form-check-label" htmlFor="signToggle">Sign Card</label>
                             </div>
                         </div>

@@ -11,174 +11,9 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// utils
-function send(res, obj, err) {
-    if (obj) {
-        res.send(obj);
-    } else {
-        res.status(404).send(err);
-    }
-}
-
-// User routes
-app.post("/register", async (req, res) => {
-    // verify body is good
-    const { username, password } = req.body || {};
-    if (username == undefined || password == undefined) {
-        res.status(400).send("Bad username or password");
-        return;
-    }
-    // verify if username is already in use
-    const userWithSameName = await prisma.User.findUnique({
-        where: { username: username },
-    });
-
-    if (userWithSameName) {
-        res.status(409).send("Username taken");
-        return;
-    }
-
-    const newUser = await prisma.User.create({
-        data: { username: username, password: password },
-    });
-
-    // hide password
-    res.json({ id: newUser["id"], username: newUser["username"] });
-});
-
-app.get("/user/:id", async (req, res) => {
-    const id = parseInt(req.params.id) || undefined;
-
-    if (id == undefined) {
-        res.status(400).send("Bad id");
-        return;
-    }
-
-    const user = await prisma.User.findUnique({
-        where: { id },
-        include: {
-            boardsCreated: true,
-            cardsCreated: true,
-            commentsCreated: true,
-            cardsLiked: true,
-        },
-    });
-
-    if (user) {
-        delete user["password"];
-    }
-
-    send(res, user, "No user found");
-});
-
-// Board routes
-app.post("/boards", async (req, res) => {
-    const { authorId, title, imgUrl, category } = req.body;
-
-    const newBoard = await prisma.Board.create({
-        data: {
-            authorId,
-            title,
-            imgUrl,
-            category,
-            cards: {},
-        },
-        include: { author: true },
-    });
-
-    delete newBoard["author"]["password"];
-    res.json(newBoard);
-});
-
-app.get("/boards", async (req, res) => {
-    // handle query parameters
-    let whereObj = {};
-    if (req.query.category) {
-        whereObj = { category: req.query.category };
-    }
-    if (req.query.authorId) {
-        whereObj = { authorId: parseInt(req.query.authorId) };
-    }
-    if (req.query.title) {
-        whereObj = {
-            title: {
-                contains: req.query.title,
-                mode: "insensitive",
-            },
-        };
-    }
-
-    let boards = await prisma.Board.findMany({
-        include: { author: true },
-        where: whereObj,
-    });
-
-    for (const board of boards) {
-        delete board["author"]["password"];
-    }
-
-    if (req.query.recent && req.query.recent == "true") {
-        boards.sort((a, b) => b["id"] - a["id"]);
-    }
-
-    res.json(boards);
-});
-
-app.get("/boards/:id", async (req, res) => {
-    const id = parseInt(req.params.id) || undefined;
-
-    if (id == undefined) {
-        res.status(400).send("Bad id");
-        return;
-    }
-
-    const board = await prisma.Board.findUnique({
-        where: { id },
-        include: { author: true, cards: true },
-    });
-
-    if (board) {
-        delete board["author"]["password"];
-    }
-
-    send(res, board, "No board found");
-});
-
-app.delete("/boards/:id", async (req, res) => {
-    const id = parseInt(req.params.id) || undefined;
-    const authorId = parseInt(req.body.authorId) || undefined;
-
-    if (id == undefined) {
-        res.status(400).send("Bad id");
-        return;
-    }
-
-    const board = await prisma.Board.delete({
-        where: { id, authorId },
-    });
-
-    send(res, board, "No board found");
-});
-
-app.post("/card", async (req, res) => {
-    let { authorId, boardId, content, gifUrl, signed } = req.body || undefined;
-    authorId = parseInt(authorId);
-    boardId = parseInt(boardId);
-    const newCard = await prisma.Card.create({
-        data: {
-            authorId,
-            boardId,
-            content,
-            signed,
-            gifUrl,
-            comments: {},
-            likes: 0,
-            usersLiked: {},
-        }
-    });
-
-    res.json(newCard);
-});
+app.use("/user", require("./routes/userRoutes"));
+app.use("/boards", require("./routes/boardRoutes"));
+app.use("/card", require("./routes/cardRoutes"));
 
 // external API call
 app.get("/gifs/:query", async (req, res) => {
@@ -191,11 +26,24 @@ app.get("/gifs/:query", async (req, res) => {
     let url = "http://api.giphy.com/v1/gifs/search?api_key=" + process.env.GIPHY_KEY + "&q=" + query;
     const response = await fetch(url);
     if (!response || !response.ok) {
-        throw new Error("Failed to fetch from GIPHY");
+        console.error("Failed to fetch from GIPHY");
+        res.status(500).send("Failed to fetch from GIPHY");
+        return;
     }
     res.json(await response.json());
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    const guest = await prisma.User.findUnique({
+        where: { username: "Guest" },
+    });
+
+    if (!guest) {
+        console.log("Creating Guest user");
+        await prisma.User.create({
+            data: { username: "Guest", password: "Guest", id: -1 },
+        });
+    }
+
     console.log(`Server listening on port ${PORT}`);
 });
