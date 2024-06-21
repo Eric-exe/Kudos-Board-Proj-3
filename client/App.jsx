@@ -22,12 +22,6 @@ function App() {
         API.getBoardsData(setBoardData, {});
     }, []);
 
-    // whenever boardData changes, update user data as well
-    // as user data stores board creation/like/dislike data
-    useEffect(() => {
-        API.getUserData(setUserData, userData["id"]);
-    }, [boardData]);
-
     return (
         <>
             <header className="d-flex justify-content-between text-white bg-primary px-3 py-2">

@@ -17,10 +17,10 @@ function Card(props) {
         props.userData[0]["cardsLiked"].some((likedCard) => likedCard["id"] === props.card["id"])
     );
 
-    // handles the like/unlike event
+    // handles the like/unlike event, updating user and board too
     const likeCardFn = async () => {
         await API.likeCard(props.card["id"], props.userData[0]["id"], isLiked);
-        await API.getBoardData(props.currentBoardDataFunc, props.boardId);
+        API.getBoardData(props.currentBoardDataFunc, props.boardId);
         API.getUserData(props.userData[1], props.userData[0]["id"]);
     };
 
@@ -43,12 +43,12 @@ function Card(props) {
                 )}
             </div>
             <div className="card-footer">
-                <div>
-                    {props.card["likes"]}
+                <div className="d-flex align-items-center">
                     <i
-                        className={"h5 bi bi-caret-up-fill " + (isLiked ? "like-active" : "")}
+                        className={"h4 bi bi-caret-up-fill m-0 " + (isLiked ? "like-active" : "")}
                         onClick={() => setIsLiked((old) => !old)}
-                    ></i>
+                    />
+                    {props.card["likes"]}
                 </div>
             </div>
         </div>

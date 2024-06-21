@@ -52,12 +52,12 @@ class API {
         );
     }
 
-    static async deleteBoard(funct, id, authorId) {
+    static async deleteBoard(id, authorId) {
         return this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/boards/" + String(id),
             "delete",
             JSON.stringify({ authorId }),
-            funct,
+            () => {},
             false
         );
     }
@@ -81,6 +81,16 @@ class API {
             import.meta.env.VITE_DB_URL + "/card/like/" + String(cardId),
             "post",
             JSON.stringify({ userId, isLiked }),
+            () => {},
+            false
+        );
+    }
+
+    static async deleteCard(id, authorId) {
+        return this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/card/" + String(id),
+            "delete",
+            JSON.stringify({ authorId }),
             () => {},
             false
         );

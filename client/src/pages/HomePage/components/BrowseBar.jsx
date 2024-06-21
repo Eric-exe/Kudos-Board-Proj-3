@@ -49,14 +49,14 @@ function BrowseBar(props) {
     const [createBoardCategory, setCreateBoardCategory] = useState("");
 
     // handle the create board button click event
-    const handleCreateBoardClick = (event) => {
+    const handleCreateBoardClick = async (event) => {
         event.preventDefault();
         // sanity check: bad input
         if (createBoardTitle == "" || createBoardImgURL == "" || createBoardCategory == "") {
             return;
         }
 
-        API.createBoard(
+        await API.createBoard(
             props.boardDataFunc,
             props.userData[0]["id"],
             createBoardTitle,
@@ -64,6 +64,7 @@ function BrowseBar(props) {
             createBoardCategory
         );
 
+        API.getUserData(props.userData[1], props.userData[0]["id"]);
         // cleanup
         setCreateBoardTitle("");
         setCreateBoardImgURL("");

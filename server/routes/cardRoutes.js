@@ -76,4 +76,25 @@ router.post("/like/:id", async (req, res) => {
     res.json("Liked card");
 });
 
+router.delete('/:id', (req, res) => {
+    const id = parseInt(req.params.id) || undefined;
+    const authorId = parseInt(req.body.authorId) || undefined;
+
+    if (id == undefined) {
+        res.status(400).send("Bad id");
+        return;
+    }
+
+    const card = prisma.Card.delete({
+        where: { id, authorId },
+    });
+
+    if (card) {
+        res.json(card);
+    }
+    else {
+        res.status(404).send("No card found");
+    }
+});
+
 module.exports = router;

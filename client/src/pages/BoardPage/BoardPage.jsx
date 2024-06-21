@@ -29,7 +29,7 @@ function BoardPage(props) {
                 <>
                     <div className="">
                         <div className="d-flex flex-wrap align-items-center justify-content-center mt-4">
-                            <h2 className="d-inline-block align m-0 text-wrap text-break">{currentBoardData["title"]}</h2>
+                            <h2 className="m-0 text-wrap text-break">{currentBoardData["title"]}</h2>
                             &nbsp;
                             <span className="d-inline-block badge bg-secondary">{currentBoardData["category"]}</span>
                         </div>

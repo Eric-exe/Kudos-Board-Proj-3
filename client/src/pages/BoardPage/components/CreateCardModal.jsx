@@ -37,6 +37,7 @@ function CreateCardModal(props) {
     const handleCreateCard = async () => {
         await API.createCard(props.userData[0]["id"], props.boardId, cardContent, GIFUrl, cardSigned);
         API.getBoardData(props.currentBoardDataFunc, props.boardId);
+        API.getUserData(props.userData[1], props.userData[0]["id"]);
         bootstrap.Modal.getInstance(document.getElementById("createCardModal")).hide();
     }
 
