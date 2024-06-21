@@ -14,7 +14,8 @@ class API {
 
             const response = await fetch(url, fetchInput);
             if (!response || !response.ok) {
-                throw new Error("Failed to GET");
+                console.error("Failed to GET");
+                return response;
             }
             const data = await response.json();
             funct(concat ? (old) => [...old, data] : data);
@@ -26,7 +27,7 @@ class API {
     }
 
     static async getUserData(funct, id) {
-        return this.fetchRequest(import.meta.env.VITE_DB_URL + "/user/" + String(id), "get", "", funct, false);
+        return await this.fetchRequest(import.meta.env.VITE_DB_URL + "/user/" + String(id), "get", "", funct, false);
     }
 
     static async getBoardsData(funct, filters) {
@@ -35,15 +36,15 @@ class API {
             url += key + "=" + filters[key] + "&";
         }
         url = url.slice(0, -1);
-        return this.fetchRequest(url, "get", "", funct, false);
+        return await this.fetchRequest(url, "get", "", funct, false);
     }
 
     static async getBoardData(funct, id) {
-        return this.fetchRequest(import.meta.env.VITE_DB_URL + "/boards/" + String(id), "get", "", funct, false);
+        return await this.fetchRequest(import.meta.env.VITE_DB_URL + "/boards/" + String(id), "get", "", funct, false);
     }
 
     static async createBoard(funct, authorId, title, imgUrl, category) {
-        return this.fetchRequest(
+        return await this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/boards",
             "post",
             JSON.stringify({ authorId, title, imgUrl, category }),
@@ -53,7 +54,7 @@ class API {
     }
 
     static async deleteBoard(id, authorId) {
-        return this.fetchRequest(
+        return await this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/boards/" + String(id),
             "delete",
             JSON.stringify({ authorId }),
@@ -67,7 +68,7 @@ class API {
     }
 
     static async createCard(authorId, boardId, content, gifUrl, signed) {
-        return this.fetchRequest(
+        return await this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/card",
             "post",
             JSON.stringify({ authorId, boardId, content, gifUrl, signed }),
@@ -77,7 +78,7 @@ class API {
     }
 
     static async likeCard(cardId, userId, isLiked) {
-        return this.fetchRequest(
+        return await this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/card/like/" + String(cardId),
             "post",
             JSON.stringify({ userId, isLiked }),
@@ -87,13 +88,33 @@ class API {
     }
 
     static async deleteCard(id, authorId) {
-        return this.fetchRequest(
+        return await this.fetchRequest(
             import.meta.env.VITE_DB_URL + "/card/" + String(id),
             "delete",
             JSON.stringify({ id, authorId }),
             () => {},
             false
         );
+    }
+
+    static async registerUser(funct, username, password) {
+        return await this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/user/register",
+            "post",
+            JSON.stringify({ username, password }),
+            funct,
+            false
+        )
+    }
+
+    static async loginUser(funct, username, password) {
+        return await this.fetchRequest(
+            import.meta.env.VITE_DB_URL + "/user/login",
+            "post",
+            JSON.stringify({ username, password }),
+            funct,
+            false
+        )
     }
 }
 

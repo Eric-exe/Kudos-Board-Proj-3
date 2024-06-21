@@ -17,6 +17,11 @@ function Card(props) {
         props.userData[0]["cardsLiked"].some((likedCard) => likedCard["id"] === props.card["id"])
     );
 
+    // if user logs in, update the like status
+    useEffect(() => {
+        setIsLiked(props.userData[0]["cardsLiked"].some((likedCard) => likedCard["id"] == props.card["id"]));
+    }, [props.userData])
+
     // handles the like/unlike event, updating user and board too
     const likeCardFn = async () => {
         await API.likeCard(props.card["id"], props.userData[0]["id"], isLiked);

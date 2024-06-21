@@ -14,10 +14,14 @@ router.post("/", async (req, res) => {
             category,
             cards: {},
         },
-        include: { author: true },
+        include: { author: {
+            select: {
+                id: true,
+                username: true,
+            }
+        } },
     });
 
-    delete newBoard["author"]["password"];
     res.json(newBoard);
 });
 
@@ -40,13 +44,16 @@ router.get("/", async (req, res) => {
     }
 
     let boards = await prisma.Board.findMany({
-        include: { author: true },
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                },
+            },
+        },
         where: whereObj,
     });
-
-    for (const board of boards) {
-        delete board["author"]["password"];
-    }
 
     if (req.query.recent && req.query.recent == "true") {
         boards.sort((a, b) => b["id"] - a["id"]);
@@ -66,23 +73,31 @@ router.get("/:id", async (req, res) => {
     const board = await prisma.Board.findUnique({
         where: { id },
         include: {
-            author: true,
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                },
+            },
             cards: {
                 include: {
-                    author: true,
+                    author: {
+                        select: {
+                            id: true,
+                            username: true,
+                        },
+                    },
                 },
             },
         },
     });
 
     if (board) {
-        delete board["author"]["password"];
         // sort the cards by latest, so that liiking a card will not
-        // mess up the orrder
+        // mess up the order
         board["cards"].sort((a, b) => b["id"] - a["id"]);
         res.json(board);
-    }
-    else {
+    } else {
         res.status(404).send("No board found");
     }
 });
@@ -102,8 +117,7 @@ router.delete("/:id", async (req, res) => {
 
     if (board) {
         res.json(board);
-    }
-    else {
+    } else {
         res.status(404).send("No board found");
     }
 });

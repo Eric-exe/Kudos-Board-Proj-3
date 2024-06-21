@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import API from "../../api";
 import CreateCardModal from "./components/CreateCardModal";
-import Card from "./components/Card"
+import Card from "./components/Card";
 
 BoardPage.propTypes = {
     userData: propTypes.array.isRequired,
@@ -12,12 +12,14 @@ BoardPage.propTypes = {
 function BoardPage(props) {
     const { boardId } = useParams();
     const [currentBoardData, setCurrentBoardData] = useState(undefined);
-
     // fetch the latest data on init
     useEffect(() => {
+        console.log(props.userData[0]["username"]);
         API.getUserData(props.userData[1], props.userData[0]["id"]);
         API.getBoardData(setCurrentBoardData, boardId);
     }, []);
+
+    
 
     return (
         <>
@@ -46,22 +48,20 @@ function BoardPage(props) {
                     </div>
 
                     <div className="d-flex flex-wrap row-cols-sm-1 row-cols-md-4 justify-content-center">
-                        {
-                            currentBoardData["cards"].map((card, index) => {
-                                return (
-                                    <Card
-                                        key={index}
-                                        card={card}
-                                        boardId={boardId}
-                                        currentBoardDataFunc={setCurrentBoardData}
-                                        userData={props.userData}
-                                        isOwned={props.userData[0]["cardsCreated"].some(
-                                            (createdCard) => createdCard["id"] === card["id"]
-                                        )}
-                                    />                                 
-                                )
-                            })
-                        }
+                        {currentBoardData["cards"].map((card, index) => {
+                            return (
+                                <Card
+                                    key={index}
+                                    card={card}
+                                    boardId={boardId}
+                                    currentBoardDataFunc={setCurrentBoardData}
+                                    userData={props.userData}
+                                    isOwned={props.userData[0]["cardsCreated"].some(
+                                        (createdCard) => createdCard["id"] === card["id"]
+                                    )}
+                                />
+                            );
+                        })}
                     </div>
                 </>
             )}

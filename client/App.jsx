@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./src/pages/HomePage/HomePage";
 import BoardPage from "./src/pages/BoardPage/BoardPage";
+import LoginForm from './src/LoginForm'
 import API from "./src/api";
 
 function App() {
@@ -22,16 +23,21 @@ function App() {
         API.getBoardsData(setBoardData, {});
     }, []);
 
+    useEffect(() => {
+        console.log("UPDATED: ", userData);
+    }, [userData]);
+
     return (
         <>
             <header className="d-flex justify-content-between text-white bg-primary px-3 py-2">
                 <h2 className="m-0">Kudos Board</h2>
-                <button type="button" className="btn btn-outline-light">
-                    {userData["username"]}
-                </button>
+                <LoginForm
+                    userData={[userData, setUserData]}
+                    boardDataFunc={setBoardData}
+                />
             </header>
 
-            <BrowserRouter>
+            <Router>
                 <Routes>
                     <Route
                         index
@@ -39,7 +45,7 @@ function App() {
                     />
                     <Route path="board/:boardId" element={<BoardPage userData={[userData, setUserData]} />} />
                 </Routes>
-            </BrowserRouter>
+            </Router>
 
             <footer className="d-flex justify-content-center text-white bg-primary p-2">
                 <p className="m-0">Kudos Board</p>

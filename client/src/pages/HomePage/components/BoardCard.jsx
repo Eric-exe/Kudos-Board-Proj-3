@@ -1,11 +1,11 @@
 import propTypes from "prop-types";
+import { useNavigate } from 'react-router-dom';
 import API from "../../../api";
 import "./BoardCard.css";
 
 BoardCard.propTypes = {
     userData: propTypes.array.isRequired,
     boardData: propTypes.array.isRequired,
-
     currentBoardCard: propTypes.object.isRequired,
     isOwned: propTypes.bool.isRequired, // changes the ui to allow deletion and stops self-upvotes
     boardDataFunc: propTypes.func.isRequired,
@@ -14,11 +14,13 @@ BoardCard.propTypes = {
 
 function BoardCard(props) {
     // handle the deletion of a board card
-    const handleDeleteBoardCard = async () => {
-        await API.deleteBoard(props.currentBoardCard["id"], props.userData["id"]);
+    const handleDeleteBoardCard = () => {
+        API.deleteBoard(() => {}, props.currentBoardCard["id"], props.userData["id"]);
+        // delete from boardData state
         props.boardData[1](props.boardData[0].filter((board) => board["id"] !== props.currentBoardCard["id"]));
-        API.getUserData(props.userData[1], props.userData[0]["id"]);
     };
+
+    const navigate = useNavigate();
 
     return (
         <div
@@ -43,15 +45,15 @@ function BoardCard(props) {
                         <div className="d-flex align-items-center">
                             <i className="bi bi-trash-fill h5 m-0 trash" onClick={handleDeleteBoardCard}></i>
                         </div>
-                        <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.currentBoardCard["id"]}>
+                        <div className="btn btn-sm btn-outline-primary" onClick={() => navigate("/board/" + props.currentBoardCard["id"])}>
                             View
-                        </a>
+                        </div>
                     </div>
                 ) : (
                     <div className="d-flex flex-wrap justify-content-end">
-                        <a className="btn btn-sm btn-outline-primary" href={"/board/" + props.currentBoardCard["id"]}>
+                        <div className="btn btn-sm btn-outline-primary" onClick={() => navigate("/board/" + props.currentBoardCard["id"])}>
                             View
-                        </a>
+                        </div>
                     </div>
                 )}
             </div>
