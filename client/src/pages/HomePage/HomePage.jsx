@@ -39,6 +39,8 @@ function HomePage(props) {
                     );
                 })}
             </div>
+
+            <p className="text-center">Note: When running this on Render, give it a minute or two for the backend to spin back up from inactivity.</p>
         </>
     );
 }

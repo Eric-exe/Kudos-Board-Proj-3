@@ -103,7 +103,7 @@ class API {
             JSON.stringify({ username, password }),
             funct,
             false
-        )
+        );
     }
 
     static async loginUser(funct, username, password) {
@@ -113,9 +113,9 @@ class API {
             JSON.stringify({ username, password }),
             funct,
             false
-        )
+        );
     }
-    
+
     static async createComment(cardId, authorId, content) {
         return await this.fetchRequest(
             import.meta.env.VITE_DB_URL + `/card/${cardId}/comment`,
@@ -123,7 +123,7 @@ class API {
             JSON.stringify({ authorId, content }),
             () => {},
             false
-        )
+        );
     }
 }
 

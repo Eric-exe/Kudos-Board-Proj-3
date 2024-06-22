@@ -1,5 +1,5 @@
 import propTypes from "prop-types";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import API from "../../../api";
 import "./BoardCard.css";
 
@@ -28,7 +28,11 @@ function BoardCard(props) {
                 (props.isOwned ? "border-success" : "border-primary")
             }
         >
-            <img src={props.currentBoardCard["imgUrl"]} className="card-img-top img-thumbnail img-fluid mh-50" alt="Board image" />
+            <img
+                src={props.currentBoardCard["imgUrl"]}
+                className="card-img-top img-thumbnail img-fluid mh-50"
+                alt="Board image"
+            />
 
             <div className="card-body">
                 <div className="card-title">
@@ -44,13 +48,19 @@ function BoardCard(props) {
                         <div className="d-flex align-items-center">
                             <i className="bi bi-trash-fill h5 m-0 trash" onClick={handleDeleteBoardCard}></i>
                         </div>
-                        <div className="btn btn-sm btn-outline-primary" onClick={() => navigate("/board/" + props.currentBoardCard["id"])}>
+                        <div
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => navigate("/board/" + props.currentBoardCard["id"])}
+                        >
                             View
                         </div>
                     </div>
                 ) : (
                     <div className="d-flex flex-wrap justify-content-end">
-                        <div className="btn btn-sm btn-outline-primary" onClick={() => navigate("/board/" + props.currentBoardCard["id"])}>
+                        <div
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => navigate("/board/" + props.currentBoardCard["id"])}
+                        >
                             View
                         </div>
                     </div>
