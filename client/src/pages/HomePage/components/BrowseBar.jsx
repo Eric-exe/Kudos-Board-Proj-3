@@ -5,15 +5,15 @@ import API from "../../../api";
 BrowseBar.propTypes = {
     userData: propTypes.array.isRequired,
     boardDataFunc: propTypes.func.isRequired,
-    filter: propTypes.array.isRequired, 
+    filter: propTypes.array.isRequired,
 };
 
 function toFilterObject(filterValue, userId) {
     const filters = {
-        "All": {},
-        "Recent": { recent: true },
-        "Created": { authorId: userId },
-        "Category": { category: filterValue }
+        All: {},
+        Recent: { recent: true },
+        Created: { authorId: userId },
+        Category: { category: filterValue },
     };
 
     return filters[filterValue] || filters["Category"];

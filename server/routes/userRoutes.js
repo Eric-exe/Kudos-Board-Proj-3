@@ -3,107 +3,75 @@ const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-router.post("/register", async (req, res) => {
-    // verify body is good
-    const { username, password } = req.body || undefined;
-    if (
-        username == undefined ||
-        password == undefined ||
-        username == "" ||
-        password == "" ||
-        username.includes(" ") ||
-        password.includes(" ")
-    ) {
-        res.status(400).send("Bad username or password");
-        return;
-    }
-    // verify if username is already in use
-    const userWithSameName = await prisma.User.findUnique({
-        where: { username: username },
-    });
+const validateCreds = (username, password) => {
+    return username && password && !username.includes(" ") && !password.includes(" ");
+};
 
-    if (userWithSameName) {
-        res.status(409).send("Username taken");
-        return;
+const userIncludeOptions = {
+    boardsCreated: true,
+    cardsCreated: true,
+    commentsCreated: true,
+    cardsLiked: true,
+};
+
+router.post("/register", async (req, res) => {
+    const { username, password } = req.body || {};
+
+    if (!validateCreds(username, password)) {
+        return res.status(400).send("Bad username or password");
+    }
+
+    const existingUser = await prisma.User.findUnique({ where: { username } });
+    if (existingUser) {
+        return res.status(409).send("Username taken");
     }
 
     const newUser = await prisma.User.create({
-        data: {
-            username: username,
-            password: password,
-            boardsCreated: {},
-            cardsCreated: {},
-            commentsCreated: {},
-            cardsLiked: {},
-        },
-        include: {
-            boardsCreated: true,
-            cardsCreated: true,
-            commentsCreated: true,
-            cardsLiked: true,
-        },
+        data: { username, password, boardsCreated: {}, cardsCreated: {}, commentsCreated: {}, cardsLiked: {} },
+        include: userIncludeOptions,
     });
 
-    delete newUser["password"];
+    delete newUser.password;
     res.json(newUser);
 });
 
 router.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body || {};
 
-    if (
-        username == undefined ||
-        password == undefined ||
-        username == "" ||
-        password == "" ||
-        username.includes(" ") ||
-        password.includes(" ")
-    ) {
-        res.status(400).send("Bad username or password");
-        return;
+    if (!validateCreds(username, password)) {
+        return res.status(400).send("Bad username or password");
     }
 
     const user = await prisma.User.findUnique({
         where: { username, password },
-        include: {
-            boardsCreated: true,
-            cardsCreated: true,
-            commentsCreated: true,
-            cardsLiked: true,
-        },
+        include: userIncludeOptions,
     });
 
     if (!user) {
-        res.status(409).send("No user found");
-        return;
+        return res.status(409).send("No user found");
     }
 
     res.json(user);
 });
 
 router.get("/:id", async (req, res) => {
-    const id = parseInt(req.params.id) || undefined;
-    if (id === undefined) {
-        res.status(400).send("Bad id");
-        return;
+    const id = parseInt(req.params.id);
+
+    if (isNaN(id)) {
+        return res.status(400).send("Bad id");
     }
 
     const user = await prisma.User.findUnique({
         where: { id },
-        include: {
-            boardsCreated: true,
-            cardsCreated: true,
-            commentsCreated: true,
-            cardsLiked: true,
-        },
+        include: userIncludeOptions,
     });
 
-    if (user) {
-        delete user["password"];
-        res.json(user);
-    } else {
-        res.status(404).send("No user found");
+    if (!user) {
+        return res.status(404).send("No user found");
     }
+
+    delete user.password;
+    res.json(user);
 });
 
 module.exports = router;

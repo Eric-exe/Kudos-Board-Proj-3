@@ -39,7 +39,9 @@ function Card(props) {
     }, [isLiked]);
 
     const handleDeleteCard = async () => {
-        updateData(async () => { await API.deleteCard(props.card["id"], props.userData[0]["id"]); });
+        updateData(async () => {
+            await API.deleteCard(props.card["id"], props.userData[0]["id"]);
+        });
     };
 
     // handle the creation of comments inside the card
@@ -48,7 +50,9 @@ function Card(props) {
         if (comment == "") {
             return;
         }
-        updateData(async () => { await API.createComment(props.card["id"], props.userData[0]["id"], comment); });
+        updateData(async () => {
+            await API.createComment(props.card["id"], props.userData[0]["id"], comment);
+        });
         setComment("");
     };
 
