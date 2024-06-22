@@ -31,7 +31,6 @@ Deployed Application (optional): [Kudos Board Deployed Site](https://kudos-board
 
 
 #### STRETCH FEATURES
-<div style="position: relative; padding-bottom: 40.77568134171908%; height: 0;"><iframe src="https://www.loom.com/embed/5c58c6b3871c46199d3593c3f69c5f6c?sid=6319f792-cd22-4202-b9cf-b3db44815148" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
 
 - [x] **User Accounts**
   - [x] Users should be able to log in with a username and password.
@@ -48,9 +47,8 @@ Deployed Application (optional): [Kudos Board Deployed Site](https://kudos-board
 
 ### Walkthrough Video
 
-`TODO://` Add the embedded URL code to your animated app walkthrough below, `ADD_EMBEDDED_CODE_HERE`. Make sure the video or gif actually renders and animates when viewing this README. (🚫 Remove this paragraph after adding walkthrough video)
+[![Video](https://cdn.loom.com/sessions/thumbnails/5c58c6b3871c46199d3593c3f69c5f6c-with-play.gif)](https://www.loom.com/embed/5c58c6b3871c46199d3593c3f69c5f6c?sid=6319f792-cd22-4202-b9cf-b3db44815148)
 
-`ADD_EMBEDDED_CODE_HERE`
 
 ### Reflection
 
